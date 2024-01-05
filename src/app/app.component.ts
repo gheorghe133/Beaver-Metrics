@@ -7,11 +7,30 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterOutlet],
   template: `
-    <h1>Welcome to {{title}}!</h1>
-
-    <router-outlet></router-outlet>
+    <section class="section">
+      <div class="container-hero"></div>
+      <div class="container-table"></div>
+    </section>
   `,
-  styles: [],
+  styles: [
+    `
+      .section {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: 100%;
+        padding: 20px;
+      }
+
+      .container-hero {
+        width: 100%;
+      }
+
+      .container-table {
+        width: 100%;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'BeaverFrontEnd';
