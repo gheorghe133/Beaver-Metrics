@@ -117,7 +117,7 @@ import { RouterOutlet } from '@angular/router';
       .container-hero {
         width: 100%;
         min-height: 35vh;
-        border: 2px solid #525252;
+        border: 2px solid #808080;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -129,7 +129,7 @@ import { RouterOutlet } from '@angular/router';
       .hero-background {
         width: 100%;
         min-height: 35vh;
-        background: linear-gradient(45deg, #86198f, #047857);
+        background: linear-gradient(45deg, #6b21a8, #9d174d);
         filter: blur(100px);
       }
 
@@ -171,17 +171,14 @@ import { RouterOutlet } from '@angular/router';
       table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #1f1f23;
-        color: #94a3b8;
-        border-radius: 10px 10px 0px 0px;
+        color: #fff;
       }
 
       th,
       td {
         padding: 0.5rem;
         text-align: left;
-        border: 2px solid #525252;
-        color: #d4d4d4;
+        border-bottom: 2px solid #808080;
         cursor: pointer;
       }
 
@@ -191,7 +188,7 @@ import { RouterOutlet } from '@angular/router';
       }
 
       tr:hover {
-        background-color: #262626;
+        background-color: #111;
       }
 
       .user-image {
@@ -222,20 +219,20 @@ import { RouterOutlet } from '@angular/router';
 
       .search-box input {
         position: absolute;
-        border: 2px solid #525252;
+        border: 2px solid #808080;
         background-color: transparent;
         padding: 0 25px 0 45px;
         border-radius: 5px;
         height: 100%;
         width: 100%;
-        color: #d4d4d4;
+        color: #fff;
         font-size: 15px;
         font-weight: 400;
         outline: none;
       }
 
       .search-box input::placeholder {
-        color: #d4d4d4;
+        color: #fff;
       }
 
       .container-search .search-box i {
@@ -245,7 +242,7 @@ import { RouterOutlet } from '@angular/router';
         z-index: 10;
         top: 50%;
         transform: translateY(-50%);
-        color: #525252;
+        color: #fff;
       }
     `,
   ],
