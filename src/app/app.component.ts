@@ -9,6 +9,7 @@ import { RouterOutlet } from '@angular/router';
   template: `
     <section class="section">
       <div class="container-hero">
+        <div class="hero-background"></div>
         <div class="hero">
           <div class="hero-body">
             <p class="title">Beaver FrontEnd</p>
@@ -116,13 +117,20 @@ import { RouterOutlet } from '@angular/router';
       .container-hero {
         width: 100%;
         min-height: 35vh;
-        border: 2px solid #1e293b;
+        border: 2px solid #525252;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
+      }
+
+      .hero-background {
+        width: 100%;
+        min-height: 35vh;
+        background: linear-gradient(45deg, #86198f, #047857);
+        filter: blur(100px);
       }
 
       .hero {
@@ -131,6 +139,7 @@ import { RouterOutlet } from '@angular/router';
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        position: absolute;
       }
 
       .hero-body {
@@ -162,7 +171,7 @@ import { RouterOutlet } from '@angular/router';
       table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #0f172a;
+        background-color: #1f1f23;
         color: #94a3b8;
         border-radius: 10px 10px 0px 0px;
       }
@@ -171,13 +180,18 @@ import { RouterOutlet } from '@angular/router';
       td {
         padding: 0.5rem;
         text-align: left;
-        border: 2px solid #1e293b;
-        color: #94a3b8;
+        border: 2px solid #525252;
+        color: #d4d4d4;
+        cursor: pointer;
       }
 
       th {
         text-transform: uppercase;
         font-size: 0.75rem;
+      }
+
+      tr:hover {
+        background-color: #262626;
       }
 
       .user-image {
@@ -208,20 +222,20 @@ import { RouterOutlet } from '@angular/router';
 
       .search-box input {
         position: absolute;
-        border: 2px solid #1e293b;
+        border: 2px solid #525252;
         background-color: transparent;
         padding: 0 25px 0 45px;
         border-radius: 5px;
         height: 100%;
         width: 100%;
-        color: #94a3b8;
+        color: #d4d4d4;
         font-size: 15px;
         font-weight: 400;
         outline: none;
       }
 
       .search-box input::placeholder {
-        color: #94a3b8;
+        color: #d4d4d4;
       }
 
       .container-search .search-box i {
@@ -231,7 +245,7 @@ import { RouterOutlet } from '@angular/router';
         z-index: 10;
         top: 50%;
         transform: translateY(-50%);
-        color: #94a3b8;
+        color: #525252;
       }
     `,
   ],
