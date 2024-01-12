@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { DataService } from './services/DataService/data.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterOutlet],
   template: `
     <section class="section">
       <div class="container-hero">
@@ -20,7 +22,12 @@ import { RouterOutlet } from '@angular/router';
       <div class="container-search">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="Search here..." />
+          <input
+            type="text"
+            placeholder="Search here..."
+            [(ngModel)]="searchText"
+            (input)="filterUsers()"
+          />
         </div>
       </div>
       <div class="container-table">
@@ -34,71 +41,34 @@ import { RouterOutlet } from '@angular/router';
             </tr>
           </thead>
           <tbody>
+            @for (user of filteredUsers; track $index) {
             <tr>
               <td>
                 <div class="user-image">
                   <div>
-                    <img src="https://i.pravatar.cc/150?img=1" alt="" />
+                    <img [src]="user.user_image" [alt]="user.user_image" />
                   </div>
-                  <div>nyaqu</div>
+                  <h5>{{ user.user_name }}</h5>
                 </div>
               </td>
-              <td>Руслан &#8226; Diamond &#8226; 74 &#8226; Dragon</td>
-              <td>10</td>
-              <td>23</td>
-            </tr>
-            <tr>
               <td>
-                <div class="user-image">
-                  <div>
-                    <img src="https://i.pravatar.cc/150?img=1" alt="" />
-                  </div>
-                  <div>nyaqu</div>
-                </div>
+                {{ user.best_beaver.name }} &#8226;
+                {{ user.best_beaver.rarity }} &#8226;
+                {{ user.best_beaver.type }} &#8226;
+                {{ user.best_beaver.level }}
               </td>
-              <td>Руслан &#8226; Diamond &#8226; 74 &#8226; Dragon</td>
-              <td>10</td>
-              <td>23</td>
+              <td>{{ user.rare_beavers }}</td>
+              <td>{{ user.total_beavers }}</td>
             </tr>
+            } @empty {
             <tr>
-              <td>
-                <div class="user-image">
-                  <div>
-                    <img src="https://i.pravatar.cc/150?img=1" alt="" />
-                  </div>
-                  <div>nyaqu</div>
+              <td colspan="4">
+                <div class="container-not-found">
+                  <h1>user not found</h1>
                 </div>
               </td>
-              <td>Руслан &#8226; Diamond &#8226; 74 &#8226; Dragon</td>
-              <td>10</td>
-              <td>23</td>
             </tr>
-            <tr>
-              <td>
-                <div class="user-image">
-                  <div>
-                    <img src="https://i.pravatar.cc/150?img=1" alt="" />
-                  </div>
-                  <div>nyaqu</div>
-                </div>
-              </td>
-              <td>Руслан &#8226; Diamond &#8226; 74 &#8226; Dragon</td>
-              <td>10</td>
-              <td>23</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="user-image">
-                  <div>
-                    <img src="https://i.pravatar.cc/150?img=1" alt="" />
-                  </div>
-                  <div>nyaqu</div>
-                </div>
-              </td>
-              <td>Руслан &#8226; Diamond &#8226; 74 &#8226; Dragon</td>
-              <td>10</td>
-              <td>23</td>
-            </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -244,9 +214,35 @@ import { RouterOutlet } from '@angular/router';
         transform: translateY(-50%);
         color: #fff;
       }
+
+      .container-not-found {
+        width: 100%;
+        min-height: 20vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     `,
   ],
 })
 export class AppComponent {
   title = 'BeaverFrontEnd';
+  searchText: string = '';
+  usersDisplay: any[] = [];
+  filteredUsers: any[] = [];
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit(): void {
+    this.dataService.getData().subscribe((data) => {
+      this.usersDisplay = this.filteredUsers = data;
+      console.log(this.usersDisplay);
+    });
+  }
+
+  filterUsers(): void {
+    this.filteredUsers = this.usersDisplay.filter((user: any) =>
+      user.user_name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
 }

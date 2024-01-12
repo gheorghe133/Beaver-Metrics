@@ -1,0 +1,753 @@
+[
+    {
+        "0": {
+            "user_name": "1110011",
+            "bestBeaver": {
+                "name": "Ноа",
+                "rarity": "Gold",
+                "rarityName": "Золотой",
+                "level": 69,
+                "type": "Fire"
+            },
+            "lastTimeUsed": 1687529480.713,
+            "total": 7
+        },
+        "nyaqu": {
+            "bestBeaver": {
+                "name": "Руслан",
+                "rarity": "Diamond",
+                "rarityName": "Алмазный",
+                "level": 74,
+                "type": "Dragon"
+            },
+            "lastTimeUsed": 1687545284.605,
+            "total": 23
+        },
+        "6yjika_xjie6aa": {
+            "bestBeaver": {
+                "name": "Ронан",
+                "rarity": "Wood",
+                "rarityName": "Деревянный",
+                "level": 12,
+                "type": "Psychic"
+            },
+            "lastTimeUsed": 1687120517.66,
+            "total": 1
+        },
+        "f4rmose": {
+            "bestBeaver": {
+                "name": "Корнелиус",
+                "rarity": "Iron",
+                "rarityName": "Железный",
+                "level": 42,
+                "type": "Steel"
+            },
+            "lastTimeUsed": 1687553197.923,
+            "total": 14
+        },
+        "indemori": {
+            "bestBeaver": {
+                "name": "Христофор",
+                "rarity": "Gold",
+                "rarityName": "Золотой",
+                "level": 65,
+                "type": "Fairy"
+            },
+            "lastTimeUsed": 1687459171.119,
+            "total": 11
+        },
+        "ttajlka_kojlbacbl": {
+            "beavers": [
+                {
+                    "name": "Элиас",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 53,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Фредерик",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 3,
+                    "type": "Fire"
+                }
+            ],
+            "bestBeaver": {
+                "name": "Элиас",
+                "rarity": "Gold",
+                "rarityName": "Золотой",
+                "level": 53,
+                "type": "Ghost"
+            },
+            "lastTimeUsed": 1687120155.249,
+            "total": 2
+        },
+        "xjokerge": {
+            "beavers": [
+                {
+                    "name": "Киллиан",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 14,
+                    "type": "Steel"
+                },
+                {
+                    "name": "Трифон",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 45,
+                    "type": "Electric"
+                }
+            ],
+            "bestBeaver": {
+                "name": "Трифон",
+                "rarity": "Iron",
+                "rarityName": "Железный",
+                "level": 45,
+                "type": "Electric"
+            },
+            "lastTimeUsed": 1687280327.804,
+            "total": 2
+        },
+        "meat_rider": {
+            "beavers": [
+                {
+                    "name": "Кирчик",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 62,
+                    "type": "Electric"
+                },
+                {
+                    "name": "Генрих",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 2,
+                    "type": "Ground"
+                },
+                {
+                    "name": "Тофик",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 10,
+                    "type": "Rock"
+                },
+                {
+                    "name": "Федериго",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 10,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Рагнар",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 67,
+                    "type": "Fire"
+                },
+                {
+                    "name": "Святослав",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 28,
+                    "type": "Steel"
+                }
+            ],
+            "bestBeaver": {
+                "name": "Рагнар",
+                "rarity": "Gold",
+                "rarityName": "Золотой",
+                "level": 67,
+                "type": "Fire"
+            },
+            "lastTimeUsed": 1687123364.603,
+            "total": 6
+        },
+        "pavlik2o1o": {
+            "beavers": [
+                {
+                    "name": "Джафар",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 7,
+                    "type": "Fire"
+                },
+                {
+                    "name": "Юлиан",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 1,
+                    "type": "Poison"
+                },
+                {
+                    "name": "Кассий",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 33,
+                    "type": "Dark"
+                },
+                {
+                    "name": "Ульф",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 7,
+                    "type": "Dark"
+                }
+            ],
+            "bestBeaver": {
+                "name": "Кассий",
+                "rarity": "Iron",
+                "rarityName": "Железный",
+                "level": 33,
+                "type": "Dark"
+            },
+            "lastTimeUsed": 1687200965.612,
+            "total": 4
+        },
+        "stepl1ghty": {
+            "beavers": [],
+            "bestBeaver": {},
+            "lastTimeUsed": 0,
+            "total": 0
+        },
+        "dinowallye": {
+            "beavers": [
+                {
+                    "name": "Арам",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 42,
+                    "type": "Electric"
+                },
+                {
+                    "name": "Виктор",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 22,
+                    "type": "Rock"
+                },
+                {
+                    "name": "Люцифер",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 21,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Бонавентура",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 44,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Аги",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 4,
+                    "type": "Ice"
+                },
+                {
+                    "name": "Тьяго",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 7,
+                    "type": "Ground"
+                },
+                {
+                    "name": "Барни",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 15,
+                    "type": "Normal"
+                },
+                {
+                    "name": "Симон",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 47,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Степан",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 13,
+                    "type": "Grass"
+                },
+                {
+                    "name": "Емельян",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 13,
+                    "type": "Dragon"
+                },
+                {
+                    "name": "Альваро",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 23,
+                    "type": "Grass"
+                },
+                {
+                    "name": "Генрих",
+                    "rarity": "Diamond",
+                    "rarityName": "Алмазный",
+                    "level": 81,
+                    "type": "Dragon"
+                },
+                {
+                    "name": "Арам",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 18,
+                    "type": "Water"
+                },
+                {
+                    "name": "Лаврентий",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 1,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Эберхард",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 65,
+                    "type": "Rock"
+                },
+                {
+                    "name": "Иван",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 22,
+                    "type": "Steel"
+                }
+            ],
+            "bestBeaver": {
+                "name": "Генрих",
+                "rarity": "Diamond",
+                "rarityName": "Алмазный",
+                "level": 81,
+                "type": "Dragon"
+            },
+            "lastTimeUsed": 1687353717.668,
+            "total": 16
+        },
+        "cartofanchik_bel": {
+            "beavers": [
+                {
+                    "name": "Амадис",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 24,
+                    "type": "Poison"
+                },
+                {
+                    "name": "Октавиан",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 40,
+                    "type": "Fighting"
+                },
+                {
+                    "name": "Альваро",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 9,
+                    "type": "Fire"
+                },
+                {
+                    "name": "Хоселито",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 19,
+                    "type": "Fire"
+                },
+                {
+                    "name": "Ричард",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 25,
+                    "type": "Fairy"
+                },
+                {
+                    "name": "Амир",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 10,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Рожер",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 18,
+                    "type": "Fighting"
+                },
+                {
+                    "name": "Зигмунд",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 5,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Хуан",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 7,
+                    "type": "Ice"
+                },
+                {
+                    "name": "Корнелиус",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 1,
+                    "type": "Ground"
+                },
+                {
+                    "name": "Святослав",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 39,
+                    "type": "Fighting"
+                },
+                {
+                    "name": "Томас",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 19,
+                    "type": "Normal"
+                },
+                {
+                    "name": "Исаак",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 25,
+                    "type": "Ice"
+                },
+                {
+                    "name": "Линкей",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 17,
+                    "type": "Fighting"
+                },
+                {
+                    "name": "Доминик",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 22,
+                    "type": "Fairy"
+                },
+                {
+                    "name": "Эдмунд",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 42,
+                    "type": "Grass"
+                },
+                {
+                    "name": "Тавус",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 16,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Лев",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 5,
+                    "type": "Dragon"
+                },
+                {
+                    "name": "Киллиан",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 1,
+                    "type": "Ice"
+                },
+                {
+                    "name": "Пантелеймон",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 24,
+                    "type": "Ground"
+                },
+                {
+                    "name": "Елеазар",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 8,
+                    "type": "Electric"
+                },
+                {
+                    "name": "Иван",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 5,
+                    "type": "Ice"
+                },
+                {
+                    "name": "Энрико",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 3,
+                    "type": "Grass"
+                },
+                {
+                    "name": "Самуил",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 48,
+                    "type": "Water"
+                },
+                {
+                    "name": "Викентий",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 2,
+                    "type": "Steel"
+                },
+                {
+                    "name": "Антон",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 22,
+                    "type": "Dark"
+                },
+                {
+                    "name": "Даниил",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 3,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Касьян",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 36,
+                    "type": "Steel"
+                },
+                {
+                    "name": "Михаил",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 39,
+                    "type": "Poison"
+                },
+                {
+                    "name": "Шон",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 5,
+                    "type": "Electric"
+                },
+                {
+                    "name": "Эдмунд",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 30,
+                    "type": "Electric"
+                },
+                {
+                    "name": "Патрик",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 33,
+                    "type": "Electric"
+                },
+                {
+                    "name": "Михей",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 43,
+                    "type": "Dark"
+                },
+                {
+                    "name": "Шарль",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 23,
+                    "type": "Grass"
+                },
+                {
+                    "name": "Тимур",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 22,
+                    "type": "Fairy"
+                },
+                {
+                    "name": "Харри",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 25,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Мика",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 22,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Тимофей",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 24,
+                    "type": "Ground"
+                },
+                {
+                    "name": "Рудольф",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 24,
+                    "type": "Fire"
+                },
+                {
+                    "name": "Филарет",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 30,
+                    "type": "Fighting"
+                },
+                {
+                    "name": "Тихомир",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 42,
+                    "type": "Water"
+                },
+                {
+                    "name": "Дмитрий",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 7,
+                    "type": "Dragon"
+                },
+                {
+                    "name": "Сергей",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 44,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Ромен",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 22,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Людовик",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 45,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Тимофей",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 6,
+                    "type": "Fire"
+                },
+                {
+                    "name": "Генрих",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 27,
+                    "type": "Poison"
+                },
+                {
+                    "name": "Лаврентий",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 2,
+                    "type": "Steel"
+                },
+                {
+                    "name": "Родион",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 18,
+                    "type": "Dark"
+                },
+                {
+                    "name": "Барни",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 40,
+                    "type": "Dark"
+                },
+                {
+                    "name": "Федот",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 13,
+                    "type": "Steel"
+                },
+                {
+                    "name": "Валерьян",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 56,
+                    "type": "Rock"
+                },
+                {
+                    "name": "Эллиот",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 43,
+                    "type": "Dark"
+                },
+                {
+                    "name": "Гамлет",
+                    "rarity": "Wood",
+                    "rarityName": "Деревянный",
+                    "level": 20,
+                    "type": "Normal"
+                },
+                {
+                    "name": "Фердинанд",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 28,
+                    "type": "Ghost"
+                },
+                {
+                    "name": "Мелентий",
+                    "rarity": "Iron",
+                    "rarityName": "Железный",
+                    "level": 20,
+                    "type": "Psychic"
+                },
+                {
+                    "name": "Ибрахим",
+                    "rarity": "Gold",
+                    "rarityName": "Золотой",
+                    "level": 55,
+                    "type": "Grass"
+                }
+            ],
+            "bestBeaver": {
+                "name": "Семён",
+                "rarity": "Platinum",
+                "rarityName": "Платиновый",
+                "level": 1,
+                "type": "Fire"
+            },
+            "lastTimeUsed": 1687293639.158,
+            "total": 57
+        }
+    }
+]

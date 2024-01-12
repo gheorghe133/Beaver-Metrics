@@ -1,0 +1,38 @@
+    [
+        {
+            "user_name": "1110011",
+            "user_image": "https://i.pravatar.cc/150?img=1",
+            "rare_beavers": 5,
+            "total_beavers": 23,
+            "best_beaver": {
+                "name": "Ноа",
+                "rarity": "Gold",
+                "level": 69,
+                "type": "Fire"
+            }
+        },
+        {
+            "user_name": "nyaqu",
+            "user_image": "https://i.pravatar.cc/150?img=1",
+            "rare_beavers": 17,
+            "total_beavers": 43,
+            "best_beaver": {
+                "name": "Руслан",
+                "rarity": "Diamond",
+                "level": 74,
+                "type": "Dragon"
+            }
+        },
+        {
+            "user_name": "6yjika_xjie6aa",
+            "user_image": "https://i.pravatar.cc/150?img=1",
+            "rare_beavers": 7,
+            "total_beavers": 13,
+            "best_beaver": {
+                "name": "Ронан",
+                "rarity": "Wood",
+                "level": 12,
+                "type": "Psychic"
+            }
+        }
+    ]
