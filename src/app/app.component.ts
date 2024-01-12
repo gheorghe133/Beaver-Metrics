@@ -123,7 +123,7 @@ import { RouterOutlet } from '@angular/router';
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        margin-bottom: 50px;
+        margin-bottom: 2rem;
       }
 
       .hero-background {
@@ -208,7 +208,7 @@ import { RouterOutlet } from '@angular/router';
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 2rem;
       }
 
       .search-box {
