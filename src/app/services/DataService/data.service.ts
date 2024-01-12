@@ -7,10 +7,15 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
   private jsonFileUrl = '././assets/data.json';
+  private jsonUserFileUrl = '././assets/user.json';
 
   constructor(private http: HttpClient) {}
 
   getData(): Observable<any> {
     return this.http.get(this.jsonFileUrl);
+  }
+
+  getUserData(): Observable<any> {
+    return this.http.get(this.jsonUserFileUrl);
   }
 }
