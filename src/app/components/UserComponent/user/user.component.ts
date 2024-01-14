@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../../services/DataService/data.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule],
-  template: ` <section class="section">
+  template: `
     <div class="container-hero">
       <div class="hero-background"></div>
       <div class="hero">
@@ -66,7 +66,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         </tbody>
       </table>
     </div>
-  </section>`,
+  `,
   styles: [
     `
       .container-hero {

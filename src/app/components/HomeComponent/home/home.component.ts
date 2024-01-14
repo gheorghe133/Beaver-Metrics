@@ -3,72 +3,71 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterOutlet],
   template: `
-    <section class="section">
-      <div class="container-hero">
-        <div class="hero-background"></div>
-        <div class="hero">
-          <div class="hero-body">
-            <p class="title">Beaver Metrics</p>
-          </div>
+    <div class="container-hero">
+      <div class="hero-background"></div>
+      <div class="hero">
+        <div class="hero-body">
+          <p class="title">Beaver Metrics</p>
         </div>
       </div>
-      <div class="container-search">
-        <div class="search-box">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input
-            type="text"
-            placeholder="Search . . ."
-            [(ngModel)]="searchText"
-            (input)="searchUser()"
-          />
-        </div>
+    </div>
+    <div class="container-search">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          placeholder="Search . . ."
+          [(ngModel)]="searchText"
+          (input)="searchUser()"
+        />
       </div>
-      <div class="container-table" #target>
-        <table>
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Best Beaver</th>
-              <th>Total Beavers</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (user of usersDisplay; track $index) {
-            <tr (click)="navigateToUserPage(user)">
-              <td>
-                <div class="user-image">
-                  <div>
-                    <img [src]="user.user_image" [alt]="user.user_image" />
-                  </div>
-                  <h5>{{ user.username }}</h5>
+    </div>
+    <div class="container-table" #target>
+      @if(!loader){
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Best Beaver</th>
+            <th>Total Beavers</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of usersDisplay; track $index) {
+          <tr (click)="navigateToUserPage(user)">
+            <td>
+              <div class="user-image">
+                <div>
+                  <img [src]="user.user_image" [alt]="user.user_image" />
                 </div>
-              </td>
-              <td>
-                {{ user.best_beaver?.name }} &#8226;
-                {{ user.best_beaver?.rarity }} &#8226;
-                {{ user.best_beaver?.type }} &#8226;
-                {{ user.best_beaver?.level }}
-              </td>
-              <td>{{ user.total }}</td>
-            </tr>
-            } @empty {
-            <tr>
-              <td colspan="4">
-                <div class="container-not-found">
-                  <h1>user not found</h1>
-                </div>
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+                <h5>{{ user.username }}</h5>
+              </div>
+            </td>
+            <td>
+              {{ user.best_beaver?.name }} &#8226;
+              {{ user.best_beaver?.rarity }} &#8226;
+              {{ user.best_beaver?.type }} &#8226;
+              {{ user.best_beaver?.level }}
+            </td>
+            <td>{{ user.total }}</td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="4">
+              <div class="container-not-found">
+                <h1>user not found</h1>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
       @if(this.usersDisplay.length > 0 && !this.searchText){
       <div class="container-pagination">
         @if(canLoadPreviousPage()){
@@ -81,8 +80,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         <button disabled>Next page</button>
         }
       </div>
+      } } @else{
+      <div class="loader-container">
+        <app-loader></app-loader>
+      </div>
       }
-    </section>
+    </div>
   `,
   styles: [
     `
@@ -143,6 +146,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
       .container-table {
         width: 100%;
+        min-height: 150px;
         overflow-y: auto;
         z-index: 1;
       }
@@ -259,6 +263,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         cursor: not-allowed;
       }
 
+      .loader-container {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
       @media (max-width: 500px) {
         .title {
           font-size: 1.5rem;
@@ -267,6 +278,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         }
       }
     `,
+  ],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    RouterOutlet,
+    LoaderComponent,
   ],
 })
 export class HomeComponent {
@@ -278,6 +296,8 @@ export class HomeComponent {
   pageSize: number = 10;
   currentPage: number = 1;
   totalItems: number = 0;
+
+  loader: boolean = true;
 
   constructor(
     private dataService: DataService,
@@ -296,6 +316,8 @@ export class HomeComponent {
     this.dataService.getData().subscribe((data) => {
       this.usersDisplay = data;
       this.users = data;
+
+      this.loader = false;
 
       this.totalItems = this.usersDisplay.length;
 
