@@ -13,5 +13,5 @@ import { RouterModule } from '@angular/router';
   styles: [],
 })
 export class AppComponent {
-  title = 'BeaverFrontEnd';
+  title = 'Beaver Metrics';
 }
