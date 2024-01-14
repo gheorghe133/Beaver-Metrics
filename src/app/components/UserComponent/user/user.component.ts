@@ -19,8 +19,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
             />
           </div>
           <div class="user-information">
-            <p class="title">{{ userDetails.username }}</p>
-            <p class="subtitle">Beavers {{ userDetails.total }}</p>
+            <p class="title">{{ userDetails?.username }}</p>
+            <p class="subtitle">Beavers {{ userDetails?.total }}</p>
           </div>
         </div>
       </div>
@@ -69,14 +69,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   </section>`,
   styles: [
     `
-      .section {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        width: 100%;
-        padding: 30px;
-      }
-
       .container-hero {
         width: 100%;
         min-height: 35vh;
@@ -202,7 +194,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
       }
 
       tr:hover {
-        background-color: #111;
+        background-color: rgba(0, 0, 0, 0.5);
       }
 
       .container-not-found {

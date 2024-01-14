@@ -14,8 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         <div class="hero-background"></div>
         <div class="hero">
           <div class="hero-body">
-            <p class="title">Beaver FrontEnd</p>
-            <p class="subtitle">Users metrics</p>
+            <p class="title">Beaver Metrics</p>
           </div>
         </div>
       </div>
@@ -76,17 +75,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   `,
   styles: [
     `
-      .section {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        width: 100%;
-        padding: 30px;
-      }
-
       .container-hero {
         width: 100%;
-        min-height: 35vh;
+        min-height: 400px;
         border: 2px solid #808080;
         display: flex;
         flex-direction: column;
@@ -94,13 +85,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         align-items: center;
         border-radius: 5px;
         margin-bottom: 2rem;
+        position: relative;
       }
 
       .hero-background {
         width: 100%;
-        min-height: 35vh;
-        background: linear-gradient(45deg, #6b21a8, #9d174d);
-        filter: blur(100px);
+        min-height: 45vh;
+        background: linear-gradient(45deg, #3e204a, #91775a);
+        filter: blur(1000px);
+        position: absolute;
       }
 
       .hero {
@@ -109,11 +102,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        background: url('/assets/hero.gif');
+        height: 100%;
+        background-size: cover;
+        background-position: center;
         position: absolute;
+        border-radius: 5px;
+        z-index: 1;
       }
 
       .hero-body {
+        display: flex;
         flex-grow: 1;
+        align-items: center;
         flex-shrink: 0;
         padding: 9rem 4.5rem;
         color: #fff;
@@ -136,6 +137,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       .container-table {
         width: 100%;
         overflow-y: auto;
+        z-index: 1;
       }
 
       table {
@@ -179,6 +181,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         align-items: center;
         width: 100%;
         margin-bottom: 2rem;
+        z-index: 1;
       }
 
       .search-box {
@@ -235,7 +238,6 @@ export class HomeComponent {
   ngOnInit(): void {
     this.dataService.getData().subscribe((data) => {
       this.usersDisplay = this.filteredUsers = data;
-      console.log(this.usersDisplay);
     });
   }
 
