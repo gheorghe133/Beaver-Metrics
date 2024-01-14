@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -23,24 +23,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
           <i class="fa-solid fa-magnifying-glass"></i>
           <input
             type="text"
-            placeholder="Search here..."
+            placeholder="Search . . ."
             [(ngModel)]="searchText"
-            (input)="filterUsers()"
+            (input)="searchUser()"
           />
         </div>
       </div>
-      <div class="container-table">
+      <div class="container-table" #target>
         <table>
           <thead>
             <tr>
               <th>User</th>
               <th>Best Beaver</th>
-              <th>Rare Beavers</th>
               <th>Total Beavers</th>
             </tr>
           </thead>
           <tbody>
-            @for (user of filteredUsers; track $index) {
+            @for (user of usersDisplay; track $index) {
             <tr (click)="navigateToUserPage(user)">
               <td>
                 <div class="user-image">
@@ -57,7 +56,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
                 {{ user.best_beaver?.level }}
               </td>
               <td>{{ user.total }}</td>
-              <td>{{ user.total }}</td>
             </tr>
             } @empty {
             <tr>
@@ -71,6 +69,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
           </tbody>
         </table>
       </div>
+      @if(this.usersDisplay.length > 0 && !this.searchText){
+      <div class="container-pagination">
+        @if(canLoadPreviousPage()){
+        <button (click)="prevPage(target)">Previous page</button>
+        } @else {
+        <button disabled>Previous page</button>
+        } @if(canLoadNextPage()){
+        <button (click)="nextPage(target)">Next page</button>
+        } @else {
+        <button disabled>Next page</button>
+        }
+      </div>
+      }
     </section>
   `,
   styles: [
@@ -114,24 +125,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       .hero-body {
         display: flex;
         flex-grow: 1;
+        justify-content: center;
         align-items: center;
         flex-shrink: 0;
-        padding: 9rem 4.5rem;
         color: #fff;
       }
 
       .title {
-        font-size: 2rem;
+        font-size: 3rem;
         font-weight: 600;
         line-height: 1.125;
-        word-break: break-word;
-      }
-
-      .subtitle {
-        font-size: 1.25rem;
+        letter-spacing: 8px;
         font-weight: 400;
-        line-height: 1.25;
-        margin-top: 0.5rem;
+        word-break: break-word;
+        text-align: center;
       }
 
       .container-table {
@@ -156,10 +163,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
       th {
         text-transform: uppercase;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
       }
 
-      tr:hover {
+      tbody > tr:hover {
         background-color: #111;
       }
 
@@ -224,6 +231,40 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         display: flex;
         justify-content: center;
         align-items: center;
+        letter-spacing: 8px;
+      }
+
+      .container-pagination {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .container-pagination button {
+        width: 100%;
+        font-weight: 500;
+        background: transparent;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #808080;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .container-pagination button:disabled {
+        background-color: #111;
+        color: #666;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 500px) {
+        .title {
+          font-size: 1.5rem;
+          line-height: 1.7;
+          font-weight: 700;
+        }
       }
     `,
   ],
@@ -232,19 +273,88 @@ export class HomeComponent {
   searchText: string = '';
   usersDisplay: any[] = [];
   filteredUsers: any[] = [];
+  users: any[] = [];
 
-  constructor(private dataService: DataService, private router: Router) {}
+  pageSize: number = 10;
+  currentPage: number = 1;
+  totalItems: number = 0;
+
+  constructor(
+    private dataService: DataService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.dataService.getData().subscribe((data) => {
-      this.usersDisplay = this.filteredUsers = data;
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.currentPage = params['page'] ? +params['page'] : 1;
+      this.loadUsers();
     });
   }
 
-  public filterUsers(): void {
-    this.filteredUsers = this.usersDisplay.filter((user: any) =>
-      user.username.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  private loadUsers() {
+    this.dataService.getData().subscribe((data) => {
+      this.usersDisplay = data;
+      this.users = data;
+
+      this.totalItems = this.usersDisplay.length;
+
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+
+      this.usersDisplay = data.slice(startIndex, endIndex);
+
+      if (startIndex >= this.totalItems) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+  public nextPage(target: HTMLElement) {
+    this.scrollToElement(target);
+    this.currentPage = this.currentPage + 1;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { page: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  public prevPage(target: HTMLElement) {
+    this.scrollToElement(target);
+    this.currentPage = this.currentPage - 1;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { page: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  public canLoadNextPage(): boolean {
+    const startIndex = this.currentPage * this.pageSize;
+    return startIndex < this.totalItems;
+  }
+
+  public canLoadPreviousPage(): boolean {
+    return this.currentPage > 1;
+  }
+
+  public searchUser() {
+    if (this.searchText) {
+      this.usersDisplay = this.users.filter((user) =>
+        user.username.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    } else {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      this.usersDisplay = this.users.slice(startIndex, endIndex);
+    }
+  }
+
+  private scrollToElement(target: HTMLElement) {
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY,
+    });
   }
 
   public navigateToUserPage(user: any) {
