@@ -48,17 +48,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
                   <div>
                     <img [src]="user.user_image" [alt]="user.user_image" />
                   </div>
-                  <h5>{{ user.user_name }}</h5>
+                  <h5>{{ user.username }}</h5>
                 </div>
               </td>
               <td>
-                {{ user.best_beaver.name }} &#8226;
-                {{ user.best_beaver.rarity }} &#8226;
-                {{ user.best_beaver.type }} &#8226;
-                {{ user.best_beaver.level }}
+                {{ user.best_beaver?.name }} &#8226;
+                {{ user.best_beaver?.rarity }} &#8226;
+                {{ user.best_beaver?.type }} &#8226;
+                {{ user.best_beaver?.level }}
               </td>
-              <td>{{ user.rare_beavers }}</td>
-              <td>{{ user.total_beavers }}</td>
+              <td>{{ user.total }}</td>
+              <td>{{ user.total }}</td>
             </tr>
             } @empty {
             <tr>
@@ -241,11 +241,11 @@ export class HomeComponent {
 
   public filterUsers(): void {
     this.filteredUsers = this.usersDisplay.filter((user: any) =>
-      user.user_name.toLowerCase().includes(this.searchText.toLowerCase())
+      user.username.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
   public navigateToUserPage(user: any) {
-    this.router.navigate(['user/', user.user_name]);
+    this.router.navigate(['user/', user.username]);
   }
 }

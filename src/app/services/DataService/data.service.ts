@@ -6,16 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DataService {
-  private jsonFileUrl = '././assets/data.json';
-  private jsonUserFileUrl = '././assets/user.json';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
   getData(): Observable<any> {
-    return this.http.get(this.jsonFileUrl);
+    return this.http.get(`${this.apiUrl}/getAllUsers`);
   }
 
-  getUserData(): Observable<any> {
-    return this.http.get(this.jsonUserFileUrl);
+  getUserData(name: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/getUser/${name}`);
   }
 }

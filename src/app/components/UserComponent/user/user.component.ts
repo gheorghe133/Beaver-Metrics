@@ -14,13 +14,13 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         <div class="hero-body">
           <div class="user-avatar">
             <img
-              [src]="userDetails.user_image"
-              [alt]="userDetails.user_image"
+              [src]="userDetails?.user_image"
+              [alt]="userDetails?.user_image"
             />
           </div>
           <div class="user-information">
-            <p class="title">{{ userDetails.user_name }}</p>
-            <p class="subtitle">Beavers {{ userDetails.total_beavers }}</p>
+            <p class="title">{{ userDetails.username }}</p>
+            <p class="subtitle">Beavers {{ userDetails.total }}</p>
           </div>
         </div>
       </div>
@@ -32,18 +32,39 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
           type="text"
           placeholder="Search here..."
           [(ngModel)]="searchText"
+          (input)="filterBeavers()"
         />
       </div>
     </div>
-    <div class="container-beaver">
-      @for(beaver of userBeavers; track $index) {
-      <div class="card">
-        <p class="beaver-name">Name: {{ beaver.name }}</p>
-        <p class="beaver-rarity">Rarity: {{ beaver.rarity }}</p>
-        <p class="beaver-type">Type: {{ beaver.type }}</p>
-        <p class="beaver-level">Level: {{ beaver.level }}</p>
-      </div>
-      }
+    <div class="container-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Rarity</th>
+            <th>Type</th>
+            <th>Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (beaver of filteredBeavers; track $index) {
+          <tr>
+            <td>{{ beaver.name }}</td>
+            <td>{{ beaver.rarity }}</td>
+            <td>{{ beaver.type }}</td>
+            <td>{{ beaver.level }}</td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="4">
+              <div class="container-not-found">
+                <h1>beaver not found</h1>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </section>`,
   styles: [
@@ -156,19 +177,32 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         color: #fff;
       }
 
-      .container-beaver {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        grid-gap: 1em 1em;
+      .container-table {
+        width: 100%;
+        overflow-y: auto;
       }
 
-      .card {
-        height: max-content;
-        border-radius: 5px;
-        border: 2px solid #808080;
-        padding: 20px;
+      table {
+        width: 100%;
+        border-collapse: collapse;
         color: #fff;
-        line-height: 2;
+      }
+
+      th,
+      td {
+        padding: 0.5rem;
+        text-align: left;
+        border-bottom: 2px solid #808080;
+        cursor: pointer;
+      }
+
+      th {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+      }
+
+      tr:hover {
+        background-color: #111;
       }
 
       .container-not-found {
@@ -183,7 +217,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 })
 export class UserComponent {
   searchText: string = '';
-  name: string | undefined;
+  name: string = '';
   userDetails: any;
   filteredBeavers: any[] = [];
   userBeavers: any[] = [];
@@ -197,14 +231,20 @@ export class UserComponent {
     this.route.params.subscribe((params: Params) => {
       this.name = params['name'];
 
-      this.getUserDetails();
+      this.getUserDetails(this.name);
     });
   }
 
-  private getUserDetails() {
-    this.dataService.getUserData().subscribe((result) => {
+  private getUserDetails(name: string) {
+    this.dataService.getUserData(name).subscribe((result) => {
       this.userDetails = result;
-      this.userBeavers = result.user_beavers;
+      this.userBeavers = this.filteredBeavers = result.beavers;
     });
+  }
+
+  public filterBeavers(): void {
+    this.filteredBeavers = this.userBeavers.filter((beaver: any) =>
+      beaver.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
   }
 }
