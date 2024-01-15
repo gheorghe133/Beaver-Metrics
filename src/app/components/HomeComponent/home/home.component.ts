@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
@@ -68,24 +68,25 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
           }
         </tbody>
       </table>
-      @if(this.usersDisplay.length > 0 && !this.searchText){
-      <div class="container-pagination">
-        @if(canLoadPreviousPage()){
-        <button (click)="prevPage(target)">Previous page</button>
-        } @else {
-        <button disabled>Previous page</button>
-        } @if(canLoadNextPage()){
-        <button (click)="nextPage(target)">Next page</button>
-        } @else {
-        <button disabled>Next page</button>
-        }
-      </div>
-      } } @else{
+      } @else{
       <div class="loader-container">
         <app-loader></app-loader>
       </div>
       }
     </div>
+    @if(this.usersDisplay.length > 0 && !this.searchText && !this.loader){
+    <div class="container-pagination">
+      @if(canLoadPreviousPage()){
+      <button (click)="prevPage(target)">Previous page</button>
+      } @else {
+      <button disabled>Previous page</button>
+      } @if(canLoadNextPage()){
+      <button (click)="nextPage(target)">Next page</button>
+      } @else {
+      <button disabled>Next page</button>
+      }
+    </div>
+    }
   `,
   styles: [
     `
@@ -374,9 +375,7 @@ export class HomeComponent {
   }
 
   private scrollToElement(target: HTMLElement) {
-    window.scrollTo({
-      top: target.getBoundingClientRect().top + window.scrollY,
-    });
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   public navigateToUserPage(user: any) {
