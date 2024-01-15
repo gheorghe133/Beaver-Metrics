@@ -74,7 +74,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       </div>
       }
     </div>
-    @if(this.usersDisplay.length > 9 && !this.searchText && !this.loader){
+    @if(this.usersDisplay.length > 0 && !this.searchText && !this.loader){
     <div class="container-pagination">
       @if(canLoadPreviousPage()){
       <button (click)="prevPage(target)">Previous page</button>
