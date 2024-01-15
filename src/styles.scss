@@ -27,6 +27,12 @@ body {
   margin: 0 auto;
 }
 
+@media (max-width: 500px) {
+  .section {
+    padding: 20px;
+  }
+}
+
 @media (min-width: 500px) {
   *::-webkit-scrollbar {
     height: 0.5rem;

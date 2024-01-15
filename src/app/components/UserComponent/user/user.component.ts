@@ -67,7 +67,7 @@ import { combineLatest } from 'rxjs';
         </tbody>
       </table>
     </div>
-    @if(this.userBeavers.length > 0 && !this.searchText && !this.loader){
+    @if(this.userBeavers.length > 9 && !this.searchText && !this.loader){
     <div class="container-pagination">
       @if(canLoadPreviousPage()){
       <button (click)="prevPage(target)">Previous page</button>
@@ -264,6 +264,10 @@ import { combineLatest } from 'rxjs';
       }
 
       @media (max-width: 500px) {
+        .hero-background {
+          filter: blur(100px);
+        }
+
         .title {
           font-size: 1.5rem;
           line-height: 1.7;
