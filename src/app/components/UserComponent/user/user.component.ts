@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../../services/DataService/data.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
-  template: ` <section class="section">
+  template: `
+    @if(!loader){
     <div class="container-hero">
       <div class="hero-background"></div>
       <div class="hero">
@@ -19,8 +21,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
             />
           </div>
           <div class="user-information">
-            <p class="title">{{ userDetails.username }}</p>
-            <p class="subtitle">Beavers {{ userDetails.total }}</p>
+            <p class="title">{{ userDetails?.username }}</p>
           </div>
         </div>
       </div>
@@ -30,13 +31,13 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         <i class="fa-solid fa-magnifying-glass"></i>
         <input
           type="text"
-          placeholder="Search here..."
+          placeholder="Search..."
           [(ngModel)]="searchText"
-          (input)="filterBeavers()"
+          (input)="searchBeaver()"
         />
       </div>
     </div>
-    <div class="container-table">
+    <div class="container-table" #target>
       <table>
         <thead>
           <tr>
@@ -47,7 +48,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
           </tr>
         </thead>
         <tbody>
-          @for (beaver of filteredBeavers; track $index) {
+          @for (beaver of userBeavers; track $index) {
           <tr>
             <td>{{ beaver.name }}</td>
             <td>{{ beaver.rarity }}</td>
@@ -58,7 +59,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
           <tr>
             <td colspan="4">
               <div class="container-not-found">
-                <h1>beaver not found</h1>
+                <h1>Beaver not found</h1>
               </div>
             </td>
           </tr>
@@ -66,20 +67,29 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         </tbody>
       </table>
     </div>
-  </section>`,
+    @if(this.userBeavers.length > 9 && !this.searchText && !this.loader){
+    <div class="container-pagination">
+      @if(canLoadPreviousPage()){
+      <button (click)="prevPage(target)">Previous page</button>
+      } @else {
+      <button disabled>Previous page</button>
+      } @if(canLoadNextPage()){
+      <button (click)="nextPage(target)">Next page</button>
+      } @else {
+      <button disabled>Next page</button>
+      }
+    </div>
+    } } @else {
+    <div class="loader-container">
+      <app-loader></app-loader>
+    </div>
+    }
+  `,
   styles: [
     `
-      .section {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        width: 100%;
-        padding: 30px;
-      }
-
       .container-hero {
         width: 100%;
-        min-height: 35vh;
+        min-height: 400px;
         border: 2px solid #808080;
         display: flex;
         flex-direction: column;
@@ -87,13 +97,15 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         align-items: center;
         border-radius: 5px;
         margin-bottom: 2rem;
+        position: relative;
       }
 
       .hero-background {
         width: 100%;
-        min-height: 35vh;
-        background: linear-gradient(45deg, #6b21a8, #9d174d);
-        filter: blur(100px);
+        min-height: 45vh;
+        background: linear-gradient(45deg, #3e204a, #91775a);
+        filter: blur(1000px);
+        position: absolute;
       }
 
       .hero {
@@ -102,31 +114,64 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        background: url('/assets/hero.gif');
+        height: 100%;
+        background-size: cover;
+        background-position: center;
         position: absolute;
+        border-radius: 5px;
+        z-index: 1;
       }
 
       .hero-body {
         display: flex;
+        justify-content: center;
+        flex-direction: column;
         align-items: center;
+        text-align: center;
         gap: 15px;
         flex-grow: 1;
         flex-shrink: 0;
-        padding: 9rem 4.5rem;
         color: #fff;
       }
 
       .title {
-        font-size: 2rem;
-        font-weight: 600;
+        font-size: 2.5rem;
         line-height: 1.125;
+        letter-spacing: 8px;
+        font-weight: 400;
         word-break: break-word;
+        text-align: center;
       }
 
-      .subtitle {
-        font-size: 1.25rem;
-        font-weight: 400;
-        line-height: 1.25;
-        margin-top: 0.5rem;
+      .container-table {
+        width: 100%;
+        min-height: 150px;
+        overflow-y: auto;
+        z-index: 1;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #fff;
+      }
+
+      th,
+      td {
+        padding: 0.5rem;
+        text-align: left;
+        border-bottom: 2px solid #808080;
+        cursor: pointer;
+      }
+
+      th {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+      }
+
+      tbody > tr:hover {
+        background-color: #111;
       }
 
       img {
@@ -141,6 +186,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         align-items: center;
         width: 100%;
         margin-bottom: 2rem;
+        z-index: 1;
       }
 
       .search-box {
@@ -177,34 +223,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         color: #fff;
       }
 
-      .container-table {
-        width: 100%;
-        overflow-y: auto;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        color: #fff;
-      }
-
-      th,
-      td {
-        padding: 0.5rem;
-        text-align: left;
-        border-bottom: 2px solid #808080;
-        cursor: pointer;
-      }
-
-      th {
-        text-transform: uppercase;
-        font-size: 0.75rem;
-      }
-
-      tr:hover {
-        background-color: #111;
-      }
-
       .container-not-found {
         width: 100%;
         min-height: 20vh;
@@ -212,25 +230,80 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
         justify-content: center;
         align-items: center;
       }
+
+      .container-pagination {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .container-pagination button {
+        width: 100%;
+        font-weight: 500;
+        background: transparent;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #808080;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .container-pagination button:disabled {
+        background-color: #111;
+        color: #666;
+        cursor: not-allowed;
+      }
+
+      .loader-container {
+        margin-top: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      @media (max-width: 500px) {
+        .hero-background {
+          filter: blur(100px);
+        }
+
+        .title {
+          font-size: 1.5rem;
+          line-height: 1.7;
+          font-weight: 700;
+        }
+      }
     `,
   ],
+  imports: [ReactiveFormsModule, FormsModule, LoaderComponent],
 })
 export class UserComponent {
   searchText: string = '';
   name: string = '';
   userDetails: any;
-  filteredBeavers: any[] = [];
   userBeavers: any[] = [];
+  userAllBeavers: any[] = [];
+
+  pageSize: number = 10;
+  currentPage: number = 1;
+  totalItems: number = 0;
+
+  loader: boolean = true;
 
   constructor(
     private dataService: DataService,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params: Params) => {
+    combineLatest([
+      this.activatedRoute.params,
+      this.activatedRoute.queryParams,
+    ]).subscribe(([params, queryParams]) => {
+      this.currentPage = queryParams['page'] ? +queryParams['page'] : 1;
       this.name = params['name'];
-
       this.getUserDetails(this.name);
     });
   }
@@ -238,13 +311,66 @@ export class UserComponent {
   private getUserDetails(name: string) {
     this.dataService.getUserData(name).subscribe((result) => {
       this.userDetails = result;
-      this.userBeavers = this.filteredBeavers = result.beavers;
+      this.userBeavers = result.beavers;
+      this.userAllBeavers = result.beavers;
+
+      this.loader = false;
+
+      this.totalItems = this.userBeavers.length;
+
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+
+      this.userBeavers = result.beavers.slice(startIndex, endIndex);
+
+      if (startIndex >= this.totalItems) {
+        this.router.navigate(['/']);
+      }
     });
   }
 
-  public filterBeavers(): void {
-    this.filteredBeavers = this.userBeavers.filter((beaver: any) =>
-      beaver.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  public nextPage(target: HTMLElement) {
+    this.scrollToElement(target);
+    this.currentPage = this.currentPage + 1;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { page: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  public prevPage(target: HTMLElement) {
+    this.scrollToElement(target);
+    this.currentPage = this.currentPage - 1;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { page: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  public canLoadNextPage(): boolean {
+    const startIndex = this.currentPage * this.pageSize;
+    return startIndex < this.totalItems;
+  }
+
+  public canLoadPreviousPage(): boolean {
+    return this.currentPage > 1;
+  }
+
+  public searchBeaver() {
+    if (this.searchText) {
+      this.userBeavers = this.userAllBeavers.filter((beaver) =>
+        beaver.name.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    } else {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      this.userBeavers = this.userAllBeavers.slice(startIndex, endIndex);
+    }
+  }
+
+  private scrollToElement(target: HTMLElement) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
