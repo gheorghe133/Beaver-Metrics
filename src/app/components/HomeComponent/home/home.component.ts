@@ -291,7 +291,6 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
 export class HomeComponent {
   searchText: string = '';
   usersDisplay: any[] = [];
-  filteredUsers: any[] = [];
   users: any[] = [];
 
   pageSize: number = 10;
