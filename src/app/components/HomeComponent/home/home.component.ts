@@ -1,4 +1,4 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
@@ -292,7 +292,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
     LoaderComponent,
   ],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   searchText: string = '';
   usersDisplay: any[] = [];
   users: any[] = [];
@@ -317,43 +317,55 @@ export class HomeComponent {
   }
 
   private loadUsers() {
-    this.dataService.getData().subscribe((data) => {
-      this.usersDisplay = data;
-      this.users = data;
+    const storedData = sessionStorage.getItem('usersData');
 
+    if (storedData) {
+      this.users = JSON.parse(storedData);
+      this.totalItems = this.users.length;
+      this.updateUsersDisplay();
       this.loader = false;
+    } else {
+      this.dataService.getData().subscribe((data) => {
+        this.users = data;
 
-      this.totalItems = this.usersDisplay.length;
+        sessionStorage.setItem('usersData', JSON.stringify(data));
 
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
+        this.totalItems = this.users.length;
+        this.updateUsersDisplay();
+        this.loader = false;
+      });
+    }
+  }
 
-      this.usersDisplay = data.slice(startIndex, endIndex);
+  private updateUsersDisplay() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.usersDisplay = this.users.slice(startIndex, endIndex);
 
-      if (startIndex >= this.totalItems) {
-        this.router.navigate(['/']);
-      }
-    });
+    if (startIndex >= this.totalItems) {
+      this.router.navigate(['/']);
+    }
   }
 
   public nextPage(target: HTMLElement) {
     this.scrollToElement(target);
     this.currentPage = this.currentPage + 1;
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: { page: this.currentPage },
-      queryParamsHandling: 'merge',
-    });
+    this.updateQueryParams();
   }
 
   public prevPage(target: HTMLElement) {
     this.scrollToElement(target);
     this.currentPage = this.currentPage - 1;
+    this.updateQueryParams();
+  }
+
+  private updateQueryParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { page: this.currentPage },
       queryParamsHandling: 'merge',
     });
+    this.updateUsersDisplay();
   }
 
   public canLoadNextPage(): boolean {
@@ -371,9 +383,7 @@ export class HomeComponent {
         user.username.toLowerCase().includes(this.searchText.toLowerCase())
       );
     } else {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      this.usersDisplay = this.users.slice(startIndex, endIndex);
+      this.updateUsersDisplay();
     }
   }
 
