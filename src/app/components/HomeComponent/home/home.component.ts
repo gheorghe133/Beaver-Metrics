@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -377,7 +378,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -385,6 +387,8 @@ export class HomeComponent implements OnInit {
       this.currentPage = params['page'] ? +params['page'] : 1;
       this.loadUsers();
     });
+
+    this.titleService.setTitle('Beaver Metrics | Home');
   }
 
   private loadUsers() {

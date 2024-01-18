@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../../services/DataService/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user',
@@ -310,13 +311,16 @@ export class UserComponent {
 
   constructor(
     private dataService: DataService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.name = params['name'];
       this.getUserDetails(this.name);
+      
+      this.titleService.setTitle('Beaver Metrics | ' + this.name);
     });
   }
 
