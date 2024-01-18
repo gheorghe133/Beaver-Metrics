@@ -286,6 +286,10 @@ import { Title } from '@angular/platform-browser';
       }
 
       @media (max-width: 500px) {
+        .container-beavers {
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
         .hero-background {
           filter: blur(100px);
         }
