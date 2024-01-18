@@ -163,7 +163,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
 
       .container-table {
         width: 100%;
-        min-height: 150px;
+        min-height: 682px;
         overflow-y: auto;
         z-index: 1;
       }
@@ -171,6 +171,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 600px;
         color: #fff;
       }
 
@@ -387,23 +388,27 @@ export class HomeComponent implements OnInit {
   }
 
   private loadUsers() {
-    const storedData = sessionStorage.getItem('usersData');
+    if (typeof sessionStorage !== 'undefined') {
+      const storedData = sessionStorage.getItem('usersData');
 
-    if (storedData) {
-      this.users = JSON.parse(storedData);
-      this.totalItems = this.users.length;
-      this.updateUsersDisplay();
-      this.loader = false;
-    } else {
-      this.dataService.getData().subscribe((data) => {
-        this.users = data;
-
-        sessionStorage.setItem('usersData', JSON.stringify(data));
-
+      if (storedData) {
+        this.users = JSON.parse(storedData);
         this.totalItems = this.users.length;
         this.updateUsersDisplay();
         this.loader = false;
-      });
+      } else {
+        this.dataService.getData().subscribe((data) => {
+          this.users = data;
+
+          sessionStorage.setItem('usersData', JSON.stringify(data));
+
+          this.totalItems = this.users.length;
+          this.updateUsersDisplay();
+          this.loader = false;
+        });
+      }
+    } else {
+      console.log('sessionStorage is not available.');
     }
   }
 
