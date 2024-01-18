@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../../services/DataService/data.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
-import { combineLatest } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user',
@@ -14,12 +14,12 @@ import { combineLatest } from 'rxjs';
       <div class="hero-background"></div>
       <div class="hero">
         <div class="hero-body">
-          <div class="user-avatar">
-            <img
-              [src]="userDetails?.user_image"
-              [alt]="userDetails?.user_image"
-            />
-          </div>
+          <img
+            class="user-image"
+            [src]="userDetails?.user_image"
+            [alt]="userDetails?.user_image"
+          />
+
           <div class="user-information">
             <p class="title">{{ userDetails?.username }}</p>
           </div>
@@ -31,52 +31,44 @@ import { combineLatest } from 'rxjs';
         <i class="fa-solid fa-magnifying-glass"></i>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search . . ."
           [(ngModel)]="searchText"
           (input)="searchBeaver()"
         />
       </div>
     </div>
-    <div class="container-table" #target>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Rarity</th>
-            <th>Type</th>
-            <th>Level</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (beaver of userBeavers; track $index) {
-          <tr>
-            <td>{{ beaver.name }}</td>
-            <td>{{ beaver.rarity }}</td>
-            <td>{{ beaver.type }}</td>
-            <td>{{ beaver.level }}</td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="4">
-              <div class="container-not-found">
-                <h1>Beaver not found</h1>
-              </div>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+    <div class="container-beavers">
+      @for (beaver of userBeavers; track $index) {
+      <div class="beaver-card">
+        <div class="beaver-image">
+          <img src="../../../assets/beaver-image.jpeg" alt="Beaver Image" />
+        </div>
+        <div class="beaver-information">
+          <p>
+            Name: <b>{{ beaver.name }}</b>
+          </p>
+          <p>
+            Rarity: <b> {{ beaver.rarity }}</b>
+          </p>
+          <p>
+            Type: <b>{{ beaver.type }}</b>
+          </p>
+          <p>
+            Level: <b>{{ beaver.level }}</b>
+          </p>
+        </div>
+      </div>
+      } @empty {
+      <div class="container-not-found">
+        <h1>Beaver not found</h1>
+      </div>
+      }
     </div>
-    @if(this.userBeavers.length > 0 && !this.searchText && !this.loader){
+
+    @if(this.userBeavers.length > 11 && !this.searchText && !this.loader){
     <div class="container-pagination">
-      @if(canLoadPreviousPage()){
-      <button (click)="prevPage(target)">Previous page</button>
-      } @else {
-      <button disabled>Previous page</button>
-      } @if(canLoadNextPage()){
-      <button (click)="nextPage(target)">Next page</button>
-      } @else {
-      <button disabled>Next page</button>
+      @if(loadedItems < beavers.length){
+      <button (click)="loadMore()">Load more</button>
       }
     </div>
     } } @else {
@@ -135,6 +127,13 @@ import { combineLatest } from 'rxjs';
         color: #fff;
       }
 
+      .hero-body .user-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        user-select: none;
+      }
+
       .title {
         font-size: 2.5rem;
         line-height: 1.125;
@@ -144,40 +143,55 @@ import { combineLatest } from 'rxjs';
         text-align: center;
       }
 
-      .container-table {
+      .container-beavers {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-gap: 1em 1em;
         width: 100%;
-        min-height: 150px;
+        min-height: 155px;
         overflow-y: auto;
         z-index: 1;
+        position: relative;
       }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
+      .container-beavers .beaver-card {
+        display: flex;
+        align-items: center;
+        height: max-content;
+        gap: 15px;
         color: #fff;
-      }
-
-      th,
-      td {
-        padding: 0.5rem;
-        text-align: left;
-        border-bottom: 2px solid #808080;
+        border: 2px solid #808080;
+        border-radius: 5px;
+        padding: 10px;
         cursor: pointer;
       }
 
-      th {
-        text-transform: uppercase;
-        font-size: 0.8rem;
-      }
-
-      tbody > tr:hover {
+      .container-beavers .beaver-card:hover {
         background-color: #111;
       }
 
-      img {
-        width: 120px;
-        height: 120px;
+      .container-beavers .beaver-card .beaver-image {
+        max-width: 45%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 150px;
+      }
+
+      .container-beavers .beaver-card .beaver-image img {
+        height: 100%;
+        width: 100%;
+        max-width: 160px;
         border-radius: 50%;
+        user-select: none;
+      }
+
+      .container-beavers .beaver-card .beaver-information {
+        line-height: 30px;
+      }
+
+      .container-beavers .beaver-card .beaver-information b {
+        color: #db9769;
       }
 
       .container-search {
@@ -210,6 +224,7 @@ import { combineLatest } from 'rxjs';
       }
 
       .search-box input::placeholder {
+        user-select: none;
         color: #fff;
       }
 
@@ -229,6 +244,8 @@ import { combineLatest } from 'rxjs';
         display: flex;
         justify-content: center;
         align-items: center;
+        color: #fff;
+        position: absolute;
       }
 
       .container-pagination {
@@ -242,18 +259,21 @@ import { combineLatest } from 'rxjs';
         width: 100%;
         font-weight: 500;
         background: transparent;
-        color: #fff;
         padding: 10px;
         border-radius: 5px;
-        border: 2px solid #808080;
+        border: 2px solid #db9769;
+        color: #db9769;
         cursor: pointer;
         user-select: none;
+        transition: transform 0.3s ease;
       }
 
-      .container-pagination button:disabled {
+      .container-pagination button:active {
+        transform: scale(0.95);
+      }
+
+      .container-pagination button:hover {
         background-color: #111;
-        color: #666;
-        cursor: not-allowed;
       }
 
       .loader-container {
@@ -283,94 +303,55 @@ export class UserComponent {
   name: string = '';
   userDetails: any;
   userBeavers: any[] = [];
-  userAllBeavers: any[] = [];
+  beavers: any[] = [];
 
-  pageSize: number = 10;
-  currentPage: number = 1;
-  totalItems: number = 0;
+  loadedItems: number = 12;
 
   loader: boolean = true;
 
   constructor(
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.activatedRoute.params,
-      this.activatedRoute.queryParams,
-    ]).subscribe(([params, queryParams]) => {
-      this.currentPage = queryParams['page'] ? +queryParams['page'] : 1;
+    this.activatedRoute.params.subscribe((params) => {
       this.name = params['name'];
       this.getUserDetails(this.name);
+      
+      this.titleService.setTitle('Beaver Metrics | ' + this.name);
     });
   }
 
   private getUserDetails(name: string) {
     this.dataService.getUserData(name).subscribe((result) => {
       this.userDetails = result;
-      this.userBeavers = result.beavers;
-      this.userAllBeavers = result.beavers;
+      this.beavers = result.beavers;
 
+      this.updateUserBeavers();
       this.loader = false;
-
-      this.totalItems = this.userBeavers.length;
-
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-
-      this.userBeavers = result.beavers.slice(startIndex, endIndex);
-
-      if (startIndex >= this.totalItems) {
-        this.router.navigate(['/']);
-      }
     });
   }
 
-  public nextPage(target: HTMLElement) {
-    this.scrollToElement(target);
-    this.currentPage = this.currentPage + 1;
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: { page: this.currentPage },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  public prevPage(target: HTMLElement) {
-    this.scrollToElement(target);
-    this.currentPage = this.currentPage - 1;
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: { page: this.currentPage },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  public canLoadNextPage(): boolean {
-    const startIndex = this.currentPage * this.pageSize;
-    return startIndex < this.totalItems;
-  }
-
-  public canLoadPreviousPage(): boolean {
-    return this.currentPage > 1;
-  }
-
-  public searchBeaver() {
+  private updateUserBeavers() {
     if (this.searchText) {
-      this.userBeavers = this.userAllBeavers.filter((beaver) =>
-        beaver.name.toLowerCase().includes(this.searchText.toLowerCase())
+      this.userBeavers = this.beavers.filter((beaver) =>
+        Object.values(beaver).some((value: any) =>
+          value.toString().toLowerCase().includes(this.searchText.toLowerCase())
+        )
       );
     } else {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      this.userBeavers = this.userAllBeavers.slice(startIndex, endIndex);
+      this.userBeavers = this.beavers.slice(0, this.loadedItems);
     }
   }
 
-  private scrollToElement(target: HTMLElement) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  public searchBeaver() {
+    this.updateUserBeavers();
+  }
+
+  public loadMore() {
+    this.loadedItems += 10;
+    this.updateUserBeavers();
   }
 }

@@ -1,9 +1,10 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -80,7 +81,23 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       <button (click)="prevPage(target)">Previous page</button>
       } @else {
       <button disabled>Previous page</button>
-      } @if(canLoadNextPage()){
+      }
+
+      <div class="pagination-numbers">
+        @for(pageNumber of getPaginationNumbers(); track $index ){
+        @if(pageNumber !== -1){
+        <button
+          [class.active-page]="pageNumber === currentPage"
+          (click)="goToPage(pageNumber, target)"
+        >
+          {{ pageNumber }}
+        </button>
+        } @else {
+        <span class="ellipsis">...</span>
+        } }
+      </div>
+
+      @if(canLoadNextPage()){
       <button (click)="nextPage(target)">Next page</button>
       } @else {
       <button disabled>Next page</button>
@@ -147,7 +164,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
 
       .container-table {
         width: 100%;
-        min-height: 150px;
+        min-height: 682px;
         overflow-y: auto;
         z-index: 1;
       }
@@ -155,6 +172,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 600px;
         color: #fff;
       }
 
@@ -169,6 +187,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       th {
         text-transform: uppercase;
         font-size: 0.8rem;
+        user-select: none;
       }
 
       tbody > tr:hover {
@@ -185,6 +204,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
         width: 40px;
         height: 40px;
         border-radius: 50%;
+        user-select: none;
       }
 
       .container-search {
@@ -217,6 +237,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       }
 
       .search-box input::placeholder {
+        user-select: none;
         color: #fff;
       }
 
@@ -256,6 +277,31 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
         border: 2px solid #808080;
         cursor: pointer;
         user-select: none;
+        transition: transform 0.3s ease;
+      }
+
+      .container-pagination .ellipsis {
+        width: 100%;
+        font-weight: 500;
+        background: transparent;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #808080;
+        text-align: center;
+        cursor: dafault;
+        user-select: none;
+      }
+
+      .container-pagination .pagination-numbers {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+      }
+
+      .container-pagination .pagination-numbers .active-page {
+        border-color: #d1a34f;
+        color: #d1a34f;
       }
 
       .container-pagination button:disabled {
@@ -264,11 +310,37 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
         cursor: not-allowed;
       }
 
+      .container-pagination button:active {
+        transform: scale(0.95);
+      }
+
+      .container-pagination button:hover {
+        background-color: #111;
+      }
+
+      .container-pagination .ellipsis:hover {
+        background-color: #111;
+      }
+
       .loader-container {
         margin-top: 50px;
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      @media (max-width: 800px) {
+        .container-pagination {
+          display: block;
+        }
+
+        .container-pagination button {
+          margin-bottom: 10px;
+        }
+
+        .container-pagination .ellipsis {
+          margin-bottom: 10px;
+        }
       }
 
       @media (max-width: 500px) {
@@ -292,7 +364,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
     LoaderComponent,
   ],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   searchText: string = '';
   usersDisplay: any[] = [];
   users: any[] = [];
@@ -306,7 +378,8 @@ export class HomeComponent {
   constructor(
     private dataService: DataService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -314,46 +387,107 @@ export class HomeComponent {
       this.currentPage = params['page'] ? +params['page'] : 1;
       this.loadUsers();
     });
+
+    this.titleService.setTitle('Beaver Metrics | Home');
   }
 
   private loadUsers() {
-    this.dataService.getData().subscribe((data) => {
-      this.usersDisplay = data;
-      this.users = data;
+    if (typeof sessionStorage !== 'undefined') {
+      const storedData = sessionStorage.getItem('usersData');
 
-      this.loader = false;
+      if (storedData) {
+        this.users = JSON.parse(storedData);
+        this.totalItems = this.users.length;
+        this.updateUsersDisplay();
+        this.loader = false;
+      } else {
+        this.dataService.getData().subscribe((data) => {
+          this.users = data;
 
-      this.totalItems = this.usersDisplay.length;
+          sessionStorage.setItem('usersData', JSON.stringify(data));
 
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-
-      this.usersDisplay = data.slice(startIndex, endIndex);
-
-      if (startIndex >= this.totalItems) {
-        this.router.navigate(['/']);
+          this.totalItems = this.users.length;
+          this.updateUsersDisplay();
+          this.loader = false;
+        });
       }
-    });
+    } else {
+      console.log('sessionStorage is not available.');
+    }
+  }
+
+  private updateUsersDisplay() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.usersDisplay = this.users.slice(startIndex, endIndex);
+
+    if (startIndex >= this.totalItems) {
+      this.router.navigate(['/']);
+    }
   }
 
   public nextPage(target: HTMLElement) {
     this.scrollToElement(target);
     this.currentPage = this.currentPage + 1;
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: { page: this.currentPage },
-      queryParamsHandling: 'merge',
-    });
+    this.updateQueryParams();
   }
 
   public prevPage(target: HTMLElement) {
     this.scrollToElement(target);
     this.currentPage = this.currentPage - 1;
+    this.updateQueryParams();
+  }
+
+  public goToPage(page: number, target: HTMLElement) {
+    this.currentPage = page;
+    this.scrollToElement(target);
+    this.updateQueryParams();
+  }
+
+  public getPaginationNumbers(): number[] {
+    const totalPages = Math.ceil(this.totalItems / this.pageSize);
+    const visiblePages = 3;
+
+    if (totalPages <= visiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const leftBound = Math.max(
+      1,
+      this.currentPage - Math.floor(visiblePages / 2)
+    );
+    const rightBound = Math.min(totalPages, leftBound + visiblePages - 1);
+
+    const numbers: number[] = [];
+
+    if (leftBound > 1) {
+      numbers.push(1);
+      if (leftBound > 2) {
+        numbers.push(-1); // -1 will represent "..."
+      }
+    }
+
+    for (let i = leftBound; i <= rightBound; i++) {
+      numbers.push(i);
+    }
+
+    if (rightBound < totalPages) {
+      if (rightBound < totalPages - 1) {
+        numbers.push(-1); // -1 will represent "..."
+      }
+      numbers.push(totalPages);
+    }
+
+    return numbers;
+  }
+
+  private updateQueryParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { page: this.currentPage },
       queryParamsHandling: 'merge',
     });
+    this.updateUsersDisplay();
   }
 
   public canLoadNextPage(): boolean {
@@ -371,9 +505,7 @@ export class HomeComponent {
         user.username.toLowerCase().includes(this.searchText.toLowerCase())
       );
     } else {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      this.usersDisplay = this.users.slice(startIndex, endIndex);
+      this.updateUsersDisplay();
     }
   }
 
