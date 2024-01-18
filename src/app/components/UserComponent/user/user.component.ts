@@ -149,6 +149,7 @@ import { Title } from '@angular/platform-browser';
         grid-gap: 1em 1em;
         width: 100%;
         min-height: 155px;
+        height: max-content;
         overflow-y: auto;
         z-index: 1;
         position: relative;
@@ -240,10 +241,11 @@ import { Title } from '@angular/platform-browser';
 
       .container-not-found {
         width: 100%;
-        min-height: 20vh;
+        margin-top: 40px;
         display: flex;
         justify-content: center;
         align-items: center;
+        letter-spacing: 8px;
         color: #fff;
         position: absolute;
       }
@@ -319,7 +321,7 @@ export class UserComponent {
     this.activatedRoute.params.subscribe((params) => {
       this.name = params['name'];
       this.getUserDetails(this.name);
-      
+
       this.titleService.setTitle('Beaver Metrics | ' + this.name);
     });
   }
