@@ -80,7 +80,23 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       <button (click)="prevPage(target)">Previous page</button>
       } @else {
       <button disabled>Previous page</button>
-      } @if(canLoadNextPage()){
+      }
+
+      <div class="pagination-numbers">
+        @for(pageNumber of getPaginationNumbers(); track $index ){
+        @if(pageNumber !== -1){
+        <button
+          [class.active-page]="pageNumber === currentPage"
+          (click)="goToPage(pageNumber, target)"
+        >
+          {{ pageNumber }}
+        </button>
+        } @else {
+        <span class="ellipsis">...</span>
+        } }
+      </div>
+
+      @if(canLoadNextPage()){
       <button (click)="nextPage(target)">Next page</button>
       } @else {
       <button disabled>Next page</button>
@@ -256,6 +272,31 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
         border: 2px solid #808080;
         cursor: pointer;
         user-select: none;
+        transition: transform 0.3s ease;
+      }
+
+      .container-pagination .ellipsis {
+        width: 100%;
+        font-weight: 500;
+        background: transparent;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #808080;
+        text-align: center;
+        cursor: dafault;
+        user-select: none;
+      }
+
+      .container-pagination .pagination-numbers {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+      }
+
+      .container-pagination .pagination-numbers .active-page {
+        border-color: #d1a34f;
+        color: #d1a34f;
       }
 
       .container-pagination button:disabled {
@@ -264,11 +305,37 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
         cursor: not-allowed;
       }
 
+      .container-pagination button:active {
+        transform: scale(0.95);
+      }
+
+      .container-pagination button:hover {
+        background-color: #111;
+      }
+
+      .container-pagination .ellipsis:hover {
+        background-color: #111;
+      }
+
       .loader-container {
         margin-top: 50px;
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      @media (max-width: 800px) {
+        .container-pagination {
+          display: block;
+        }
+
+        .container-pagination button {
+          margin-bottom: 10px;
+        }
+
+        .container-pagination .ellipsis {
+          margin-bottom: 10px;
+        }
       }
 
       @media (max-width: 500px) {
@@ -357,6 +424,49 @@ export class HomeComponent implements OnInit {
     this.scrollToElement(target);
     this.currentPage = this.currentPage - 1;
     this.updateQueryParams();
+  }
+
+  public goToPage(page: number, target: HTMLElement) {
+    this.currentPage = page;
+    this.scrollToElement(target);
+    this.updateQueryParams();
+  }
+
+  public getPaginationNumbers(): number[] {
+    const totalPages = Math.ceil(this.totalItems / this.pageSize);
+    const visiblePages = 3;
+
+    if (totalPages <= visiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const leftBound = Math.max(
+      1,
+      this.currentPage - Math.floor(visiblePages / 2)
+    );
+    const rightBound = Math.min(totalPages, leftBound + visiblePages - 1);
+
+    const numbers: number[] = [];
+
+    if (leftBound > 1) {
+      numbers.push(1);
+      if (leftBound > 2) {
+        numbers.push(-1); // -1 will represent "..."
+      }
+    }
+
+    for (let i = leftBound; i <= rightBound; i++) {
+      numbers.push(i);
+    }
+
+    if (rightBound < totalPages) {
+      if (rightBound < totalPages - 1) {
+        numbers.push(-1); // -1 will represent "..."
+      }
+      numbers.push(totalPages);
+    }
+
+    return numbers;
   }
 
   private updateQueryParams() {
