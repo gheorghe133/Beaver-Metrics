@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DataService } from '../../../services/DataService/data.service';
@@ -185,6 +185,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       th {
         text-transform: uppercase;
         font-size: 0.8rem;
+        user-select: none;
       }
 
       tbody > tr:hover {
@@ -201,6 +202,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
         width: 40px;
         height: 40px;
         border-radius: 50%;
+        user-select: none;
       }
 
       .container-search {
@@ -233,6 +235,7 @@ import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
       }
 
       .search-box input::placeholder {
+        user-select: none;
         color: #fff;
       }
 
