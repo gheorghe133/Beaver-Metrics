@@ -29,6 +29,40 @@ import { Title } from '@angular/platform-browser';
         />
       </div>
     </div>
+    <div class="container-filters">
+      <button class="filter-button">
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Title</span>
+      </button>
+      <button class="filter-button">
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Title</span>
+      </button>
+      <button class="filter-button">
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Beavers</span>
+      </button>
+      <button class="filter-button">
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Beavers</span>
+      </button>
+
+      <button class="filter-button">
+        <span class="icon">
+          <i class="fa-solid fa-x"></i>
+        </span>
+        <span>Clear</span>
+      </button>
+    </div>
+
     <div class="container-table" #target>
       @if(!loader){
       <table>
@@ -162,6 +196,51 @@ import { Title } from '@angular/platform-browser';
         text-align: center;
       }
 
+      .container-filters {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+        gap: 10px;
+      }
+
+      .container-filters .filter-button {
+        border: 2px solid #808080;
+        border-radius: 5px;
+        color: #fff;
+        background-color: transparent;
+        cursor: pointer;
+        padding-bottom: calc(0.7em - 1px);
+        padding-left: 1.5em;
+        padding-right: 1.5em;
+        padding-top: calc(0.7em - 1px);
+        text-align: center;
+        white-space: nowrap;
+        transition: transform 0.3s ease;
+      }
+
+      .container-filters .filter-button .icon {
+        margin-left: calc(-0.5em - 1px);
+        margin-right: 0.25em;
+        height: 1.5em;
+        width: 1.5em;
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+      }
+
+      .container-filters .filter-button:active {
+        transform: scale(0.95);
+      }
+
+      .container-filters .filter-button:hover {
+        background-color: #111;
+      }
+
+      .active-filter {
+        border-color: #d1a34f;
+        color: #d1a34f;
+      }
+
       .container-table {
         width: 100%;
         min-height: 682px;
@@ -212,7 +291,7 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         z-index: 1;
       }
 
