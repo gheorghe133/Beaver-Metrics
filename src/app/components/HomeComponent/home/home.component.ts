@@ -39,7 +39,7 @@ import { Title } from '@angular/platform-browser';
         <span class="icon">
           <i class="fa-solid fa-arrow-down-a-z"></i>
         </span>
-        <span>Title</span>
+        <span>Name</span>
       </button>
       <button
         class="filter-button"
@@ -49,7 +49,7 @@ import { Title } from '@angular/platform-browser';
         <span class="icon">
           <i class="fa-solid fa-arrow-up-z-a"></i>
         </span>
-        <span>Title</span>
+        <span>Name</span>
       </button>
       <button
         class="filter-button"
@@ -166,7 +166,7 @@ import { Title } from '@angular/platform-browser';
 
       .hero-background {
         width: 100%;
-        min-height: 45vh;
+        min-height: 35vh;
         background: linear-gradient(45deg, #3e204a, #91775a);
         filter: blur(1000px);
         position: absolute;

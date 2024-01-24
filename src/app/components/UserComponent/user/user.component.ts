@@ -85,7 +85,7 @@ import { Title } from '@angular/platform-browser';
     }
     <div class="container-beavers">
       @for (beaver of userBeavers; track $index) {
-      <div class="beaver-card">
+      <div class="beaver-card" [ngClass]="getRarityClass(beaver.rarity)">
         <div class="beaver-image">
           <img src="../../../assets/beaver-image.jpeg" alt="Beaver Image" />
         </div>
@@ -140,7 +140,7 @@ import { Title } from '@angular/platform-browser';
 
       .hero-background {
         width: 100%;
-        min-height: 45vh;
+        min-height: 35vh;
         background: linear-gradient(45deg, #3e204a, #91775a);
         filter: blur(1000px);
         position: absolute;
@@ -263,6 +263,34 @@ import { Title } from '@angular/platform-browser';
         border-radius: 5px;
         padding: 10px;
         cursor: default;
+      }
+
+      .container-beavers .huynea-color {
+        background: linear-gradient(0, #171717, transparent 66%);
+      }
+
+      .container-beavers .wood-color {
+        background: linear-gradient(0, #0f172a, transparent 66%);
+      }
+
+      .container-beavers .iron-color {
+        background: linear-gradient(0, #4b5563, transparent 66%);
+      }
+
+      .container-beavers .gold-color {
+        background: linear-gradient(0, #ca8a04, transparent 66%);
+      }
+
+      .container-beavers .diamond-color {
+        background: linear-gradient(0, #0e7490, transparent 66%);
+      }
+
+      .container-beavers .emerald-color {
+        background: linear-gradient(0, #22c55e, transparent 66%);
+      }
+
+      .container-beavers .default-color {
+        background: linear-gradient(0, transparent, transparent 66%);
       }
 
       .container-beavers .beaver-card:hover {
@@ -603,5 +631,25 @@ export class UserComponent {
 
   private compareByBeaverLevelDesc(a: any, b: any) {
     return b.level - a.level; // Change 'value' to the actual property you want to sort by
+  }
+
+  // In your component class Huynea -> Wood -> Iron -> Gold -> Diamond -> Emerald
+  public getRarityClass(rarity: string): string {
+    switch (rarity.toLowerCase()) {
+      case 'huynea':
+        return 'huynea-color';
+      case 'wood':
+        return 'wood-color';
+      case 'iron':
+        return 'iron-color';
+      case 'gold':
+        return 'gold-color';
+      case 'diamond':
+        return 'diamond-color';
+      case 'emerald':
+        return 'emerald-color';
+      default:
+        return 'default-color';
+    }
   }
 }
