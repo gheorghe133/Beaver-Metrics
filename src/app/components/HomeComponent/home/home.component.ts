@@ -29,61 +29,61 @@ import { Title } from '@angular/platform-browser';
         />
       </div>
     </div>
-    <div class="container-table" #target>
-      @if(!loader){ @if(this.usersDisplay.length > 0 && !this.searchText &&
-      !this.loader){
-      <div class="container-filters">
-        <button
-          class="filter-button"
-          [ngClass]="{ 'active-filter': buttonStates.titleAsc }"
-          (click)="sortTitleAscending()"
-        >
-          <span class="icon">
-            <i class="fa-solid fa-arrow-down-a-z"></i>
-          </span>
-          <span>Title</span>
-        </button>
-        <button
-          class="filter-button"
-          [ngClass]="{ 'active-filter': buttonStates.titleDesc }"
-          (click)="sortTitleDescending()"
-        >
-          <span class="icon">
-            <i class="fa-solid fa-arrow-up-z-a"></i>
-          </span>
-          <span>Title</span>
-        </button>
-        <button
-          class="filter-button"
-          [ngClass]="{ 'active-filter': buttonStates.beaverAsc }"
-          (click)="sortBeaverAscending()"
-        >
-          <span class="icon">
-            <i class="fa-solid fa-arrow-down-a-z"></i>
-          </span>
-          <span>Beavers</span>
-        </button>
-        <button
-          class="filter-button"
-          [ngClass]="{ 'active-filter': buttonStates.beaverDesc }"
-          (click)="sortBeaverDescending()"
-        >
-          <span class="icon">
-            <i class="fa-solid fa-arrow-up-z-a"></i>
-          </span>
-          <span>Beavers</span>
-        </button>
+    @if(this.usersDisplay.length > 0 && !this.searchText && !this.loader){
+    <div class="container-filters">
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.titleAsc }"
+        (click)="sortTitleAscending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Title</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.titleDesc }"
+        (click)="sortTitleDescending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Title</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverAsc }"
+        (click)="sortBeaverAscending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Beavers</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverDesc }"
+        (click)="sortBeaverDescending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Beavers</span>
+      </button>
 
-        @if(this.showClearButton){
-        <button class="filter-button" (click)="clearSorting()">
-          <span class="icon">
-            <i class="fa-solid fa-x"></i>
-          </span>
-          <span>Clear</span>
-        </button>
-        }
-      </div>
+      @if(this.showClearButton){
+      <button class="filter-button clear-filter" (click)="clearSorting()">
+        <span class="icon">
+          <i class="fa-solid fa-x"></i>
+        </span>
+        <span>Clear</span>
+      </button>
       }
+    </div>
+    }
+    <div class="container-table" #target>
+      @if(!loader){
       <table>
         <thead>
           <tr>
@@ -258,6 +258,11 @@ import { Title } from '@angular/platform-browser';
       .container-filters .active-filter {
         border-color: #d1a34f !important;
         color: #d1a34f !important;
+      }
+
+      .container-filters .clear-filter {
+        border-color: #b91c1c;
+        color: #b91c1c;
       }
 
       .container-table {
@@ -515,12 +520,7 @@ export class HomeComponent implements OnInit {
           this.sortUsersByQueryParam(sortParam);
         } else {
           // Sortare implicită
-          this.quicksort(
-            this.users,
-            0,
-            this.users.length - 1,
-            this.compareByBeaverDesc
-          );
+          this.users.sort(this.compareByBeaverDesc);
         }
 
         this.totalItems = this.users.length;
@@ -536,12 +536,7 @@ export class HomeComponent implements OnInit {
             this.sortUsersByQueryParam(sortParam);
           } else {
             // Sortare implicită
-            this.quicksort(
-              this.users,
-              0,
-              this.users.length - 1,
-              this.compareByBeaverDesc
-            );
+            this.users.sort(this.compareByBeaverDesc);
           }
 
           this.totalItems = this.users.length;
@@ -554,42 +549,24 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private quicksort(
-    arr: any[],
-    low: number,
-    high: number,
-    compareFunction: (a: any, b: any) => number
-  ) {
-    if (low < high) {
-      const pivotIndex = this.partition(arr, low, high, compareFunction);
-      this.quicksort(arr, low, pivotIndex - 1, compareFunction);
-      this.quicksort(arr, pivotIndex + 1, high, compareFunction);
+  private sortUsersByQueryParam(param: string) {
+    switch (param) {
+      case 'titleAsc':
+        this.users.sort(this.compareByTitleAsc);
+        break;
+      case 'titleDesc':
+        this.users.sort(this.compareByTitleDesc);
+        break;
+      case 'beaverAsc':
+        this.users.sort(this.compareByBeaverAsc);
+        break;
+      case 'beaverDesc':
+        this.users.sort(this.compareByBeaverDesc);
+        break;
+      default:
+        this.users.sort(this.compareByTitleAsc);
+        break;
     }
-  }
-
-  private partition(
-    arr: any[],
-    low: number,
-    high: number,
-    compareFunction: (a: any, b: any) => number
-  ) {
-    const pivot = arr[high];
-    let i = low - 1;
-
-    for (let j = low; j <= high - 1; j++) {
-      if (compareFunction(arr[j], pivot) <= 0) {
-        i++;
-        const temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-      }
-    }
-
-    const temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
-
-    return i + 1;
   }
 
   private compareByTitleAsc(a: any, b: any) {
@@ -635,52 +612,7 @@ export class HomeComponent implements OnInit {
     this.loadUsers(null);
   }
 
-  private sortUsersByQueryParam(param: string) {
-    switch (param) {
-      case 'titleAsc':
-        this.quicksort(
-          this.users,
-          0,
-          this.users.length - 1,
-          this.compareByTitleAsc
-        );
-        break;
-      case 'titleDesc':
-        this.quicksort(
-          this.users,
-          0,
-          this.users.length - 1,
-          this.compareByTitleDesc
-        );
-        break;
-      case 'beaverAsc':
-        this.quicksort(
-          this.users,
-          0,
-          this.users.length - 1,
-          this.compareByBeaverAsc
-        );
-        break;
-      case 'beaverDesc':
-        this.quicksort(
-          this.users,
-          0,
-          this.users.length - 1,
-          this.compareByBeaverDesc
-        );
-        break;
-      default:
-        this.quicksort(
-          this.users,
-          0,
-          this.users.length - 1,
-          this.compareByTitleAsc
-        );
-        break;
-    }
-  }
-
-  setButtonStates(sortParam: string | null) {
+  private setButtonStates(sortParam: string | null) {
     Object.keys(this.buttonStates).forEach((key) => {
       this.buttonStates[key as keyof typeof this.buttonStates] = false;
     });
