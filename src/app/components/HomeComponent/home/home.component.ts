@@ -166,7 +166,7 @@ import { Title } from '@angular/platform-browser';
 
       .hero-background {
         width: 100%;
-        min-height: 35vh;
+        min-height: 45vh;
         background: linear-gradient(45deg, #3e204a, #91775a);
         filter: blur(1000px);
         position: absolute;
@@ -478,8 +478,6 @@ export class HomeComponent implements OnInit {
     beaverDesc: false,
   };
 
-  showClearButton: boolean | undefined;
-
   constructor(
     private dataService: DataService,
     private router: Router,
@@ -495,7 +493,6 @@ export class HomeComponent implements OnInit {
 
       if (sortParam) {
         this.setButtonStates(sortParam);
-        this.showClearButton = true;
       }
     });
 
@@ -592,8 +589,6 @@ export class HomeComponent implements OnInit {
     Object.keys(this.buttonStates).forEach((key) => {
       this.buttonStates[key as keyof typeof this.buttonStates] = false;
     });
-
-    this.showClearButton = false;
 
     this.loadUsers(null);
   }

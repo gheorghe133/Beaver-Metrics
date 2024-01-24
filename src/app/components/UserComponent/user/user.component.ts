@@ -164,7 +164,7 @@ import { Title } from '@angular/platform-browser';
         border: 2px solid #808080;
         border-radius: 5px;
         padding: 10px;
-        cursor: pointer;
+        cursor: default;
       }
 
       .container-beavers .beaver-card:hover {
