@@ -29,42 +29,61 @@ import { Title } from '@angular/platform-browser';
         />
       </div>
     </div>
-    <div class="container-filters">
-      <button class="filter-button">
-        <span class="icon">
-          <i class="fa-solid fa-arrow-down-a-z"></i>
-        </span>
-        <span>Title</span>
-      </button>
-      <button class="filter-button">
-        <span class="icon">
-          <i class="fa-solid fa-arrow-up-z-a"></i>
-        </span>
-        <span>Title</span>
-      </button>
-      <button class="filter-button">
-        <span class="icon">
-          <i class="fa-solid fa-arrow-down-a-z"></i>
-        </span>
-        <span>Beavers</span>
-      </button>
-      <button class="filter-button">
-        <span class="icon">
-          <i class="fa-solid fa-arrow-up-z-a"></i>
-        </span>
-        <span>Beavers</span>
-      </button>
-
-      <button class="filter-button">
-        <span class="icon">
-          <i class="fa-solid fa-x"></i>
-        </span>
-        <span>Clear</span>
-      </button>
-    </div>
-
     <div class="container-table" #target>
-      @if(!loader){
+      @if(!loader){ @if(this.usersDisplay.length > 0 && !this.searchText &&
+      !this.loader){
+      <div class="container-filters">
+        <button
+          class="filter-button"
+          [ngClass]="{ 'active-filter': buttonStates.titleAsc }"
+          (click)="sortTitleAscending()"
+        >
+          <span class="icon">
+            <i class="fa-solid fa-arrow-down-a-z"></i>
+          </span>
+          <span>Title</span>
+        </button>
+        <button
+          class="filter-button"
+          [ngClass]="{ 'active-filter': buttonStates.titleDesc }"
+          (click)="sortTitleDescending()"
+        >
+          <span class="icon">
+            <i class="fa-solid fa-arrow-up-z-a"></i>
+          </span>
+          <span>Title</span>
+        </button>
+        <button
+          class="filter-button"
+          [ngClass]="{ 'active-filter': buttonStates.beaverAsc }"
+          (click)="sortBeaverAscending()"
+        >
+          <span class="icon">
+            <i class="fa-solid fa-arrow-down-a-z"></i>
+          </span>
+          <span>Beavers</span>
+        </button>
+        <button
+          class="filter-button"
+          [ngClass]="{ 'active-filter': buttonStates.beaverDesc }"
+          (click)="sortBeaverDescending()"
+        >
+          <span class="icon">
+            <i class="fa-solid fa-arrow-up-z-a"></i>
+          </span>
+          <span>Beavers</span>
+        </button>
+
+        @if(this.showClearButton){
+        <button class="filter-button" (click)="clearSorting()">
+          <span class="icon">
+            <i class="fa-solid fa-x"></i>
+          </span>
+          <span>Clear</span>
+        </button>
+        }
+      </div>
+      }
       <table>
         <thead>
           <tr>
@@ -236,9 +255,9 @@ import { Title } from '@angular/platform-browser';
         background-color: #111;
       }
 
-      .active-filter {
-        border-color: #d1a34f;
-        color: #d1a34f;
+      .container-filters .active-filter {
+        border-color: #d1a34f !important;
+        color: #d1a34f !important;
       }
 
       .container-table {
@@ -454,6 +473,15 @@ export class HomeComponent implements OnInit {
 
   loader: boolean = true;
 
+  buttonStates = {
+    titleAsc: false,
+    titleDesc: false,
+    beaverAsc: false,
+    beaverDesc: false,
+  };
+
+  showClearButton: boolean | undefined;
+
   constructor(
     private dataService: DataService,
     private router: Router,
@@ -464,26 +492,57 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.currentPage = params['page'] ? +params['page'] : 1;
-      this.loadUsers();
+      const sortParam = params['sort'];
+      this.loadUsers(sortParam);
+
+      if (sortParam) {
+        this.setButtonStates(sortParam);
+        this.showClearButton = true;
+      }
     });
 
     this.titleService.setTitle('Beaver Metrics | Home');
   }
 
-  private loadUsers() {
+  private loadUsers(sortParam: string | null) {
     if (typeof sessionStorage !== 'undefined') {
       const storedData = sessionStorage.getItem('usersData');
 
       if (storedData) {
         this.users = JSON.parse(storedData);
+
+        if (sortParam) {
+          this.sortUsersByQueryParam(sortParam);
+        } else {
+          // Sortare implicită
+          this.quicksort(
+            this.users,
+            0,
+            this.users.length - 1,
+            this.compareByTitleAsc
+          );
+        }
+
         this.totalItems = this.users.length;
         this.updateUsersDisplay();
+
         this.loader = false;
       } else {
         this.dataService.getData().subscribe((data) => {
           this.users = data;
-
           sessionStorage.setItem('usersData', JSON.stringify(data));
+
+          if (sortParam) {
+            this.sortUsersByQueryParam(sortParam);
+          } else {
+            // Sortare implicită
+            this.quicksort(
+              this.users,
+              0,
+              this.users.length - 1,
+              this.compareByTitleAsc
+            );
+          }
 
           this.totalItems = this.users.length;
           this.updateUsersDisplay();
@@ -495,6 +554,60 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  quicksort(
+    arr: any[],
+    low: number,
+    high: number,
+    compareFunction: (a: any, b: any) => number
+  ) {
+    if (low < high) {
+      const pivotIndex = this.partition(arr, low, high, compareFunction);
+      this.quicksort(arr, low, pivotIndex - 1, compareFunction);
+      this.quicksort(arr, pivotIndex + 1, high, compareFunction);
+    }
+  }
+
+  partition(
+    arr: any[],
+    low: number,
+    high: number,
+    compareFunction: (a: any, b: any) => number
+  ) {
+    const pivot = arr[high];
+    let i = low - 1;
+
+    for (let j = low; j <= high - 1; j++) {
+      if (compareFunction(arr[j], pivot) <= 0) {
+        i++;
+        const temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+    }
+
+    const temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+
+    return i + 1;
+  }
+
+  compareByTitleAsc(a: any, b: any) {
+    return a.username.localeCompare(b.username);
+  }
+
+  compareByTitleDesc(a: any, b: any) {
+    return b.username.localeCompare(a.username);
+  }
+
+  compareByBeaverAsc(a: any, b: any) {
+    return a.total - b.total;
+  }
+
+  compareByBeaverDesc(a: any, b: any) {
+    return b.total - a.total;
+  }
+
   private updateUsersDisplay() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
@@ -503,6 +616,113 @@ export class HomeComponent implements OnInit {
     if (startIndex >= this.totalItems) {
       this.router.navigate(['/']);
     }
+  }
+
+  clearSorting() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: null },
+      queryParamsHandling: 'merge',
+    });
+
+    this.buttonStates.titleAsc = false;
+    this.buttonStates.titleDesc = false;
+    this.buttonStates.beaverAsc = false;
+    this.buttonStates.beaverDesc = false;
+
+    this.showClearButton = false;
+
+    this.loadUsers(null);
+  }
+
+  sortUsersByQueryParam(param: string) {
+    switch (param) {
+      case 'titleAsc':
+        this.quicksort(
+          this.users,
+          0,
+          this.users.length - 1,
+          this.compareByTitleAsc
+        );
+        break;
+      case 'titleDesc':
+        this.quicksort(
+          this.users,
+          0,
+          this.users.length - 1,
+          this.compareByTitleDesc
+        );
+        break;
+      case 'beaverAsc':
+        this.quicksort(
+          this.users,
+          0,
+          this.users.length - 1,
+          this.compareByBeaverAsc
+        );
+        break;
+      case 'beaverDesc':
+        this.quicksort(
+          this.users,
+          0,
+          this.users.length - 1,
+          this.compareByBeaverDesc
+        );
+        break;
+      default:
+        // Sortare implicită
+        this.quicksort(
+          this.users,
+          0,
+          this.users.length - 1,
+          this.compareByTitleAsc
+        );
+        break;
+    }
+  }
+
+  setButtonStates(sortParam: string | null) {
+    Object.keys(this.buttonStates).forEach((key) => {
+      this.buttonStates[key as keyof typeof this.buttonStates] = false;
+    });
+
+    if (sortParam) {
+      switch (sortParam) {
+        case 'titleAsc':
+          this.buttonStates.titleAsc = true;
+          break;
+        case 'titleDesc':
+          this.buttonStates.titleDesc = true;
+          break;
+        case 'beaverAsc':
+          this.buttonStates.beaverAsc = true;
+          break;
+        case 'beaverDesc':
+          this.buttonStates.beaverDesc = true;
+          break;
+        // Alte cazuri pot fi adăugate aici, în funcție de valorile posibile ale sortParam
+      }
+    }
+  }
+
+  sortTitleAscending() {
+    this.setButtonStates('titleAsc');
+    this.sortUsers('titleAsc');
+  }
+
+  sortTitleDescending() {
+    this.setButtonStates('titleDesc');
+    this.sortUsers('titleDesc');
+  }
+
+  sortBeaverAscending() {
+    this.setButtonStates('beaverAsc');
+    this.sortUsers('beaverAsc');
+  }
+
+  sortBeaverDescending() {
+    this.setButtonStates('beaverDesc');
+    this.sortUsers('beaverDesc');
   }
 
   public nextPage(target: HTMLElement) {
@@ -558,6 +778,16 @@ export class HomeComponent implements OnInit {
     }
 
     return numbers;
+  }
+
+  sortUsers(sortParam: string) {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: sortParam },
+      queryParamsHandling: 'merge',
+    });
+
+    this.sortUsersByQueryParam(sortParam);
   }
 
   private updateQueryParams() {
