@@ -519,7 +519,7 @@ export class HomeComponent implements OnInit {
             this.users,
             0,
             this.users.length - 1,
-            this.compareByTitleAsc
+            this.compareByBeaverDesc
           );
         }
 
@@ -540,7 +540,7 @@ export class HomeComponent implements OnInit {
               this.users,
               0,
               this.users.length - 1,
-              this.compareByTitleAsc
+              this.compareByBeaverDesc
             );
           }
 
@@ -554,7 +554,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  quicksort(
+  private quicksort(
     arr: any[],
     low: number,
     high: number,
@@ -567,7 +567,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  partition(
+  private partition(
     arr: any[],
     low: number,
     high: number,
@@ -592,19 +592,19 @@ export class HomeComponent implements OnInit {
     return i + 1;
   }
 
-  compareByTitleAsc(a: any, b: any) {
+  private compareByTitleAsc(a: any, b: any) {
     return a.username.localeCompare(b.username);
   }
 
-  compareByTitleDesc(a: any, b: any) {
+  private compareByTitleDesc(a: any, b: any) {
     return b.username.localeCompare(a.username);
   }
 
-  compareByBeaverAsc(a: any, b: any) {
+  private compareByBeaverAsc(a: any, b: any) {
     return a.total - b.total;
   }
 
-  compareByBeaverDesc(a: any, b: any) {
+  private compareByBeaverDesc(a: any, b: any) {
     return b.total - a.total;
   }
 
@@ -618,7 +618,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  clearSorting() {
+  public clearSorting() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { sort: null },
@@ -635,7 +635,7 @@ export class HomeComponent implements OnInit {
     this.loadUsers(null);
   }
 
-  sortUsersByQueryParam(param: string) {
+  private sortUsersByQueryParam(param: string) {
     switch (param) {
       case 'titleAsc':
         this.quicksort(
@@ -670,7 +670,6 @@ export class HomeComponent implements OnInit {
         );
         break;
       default:
-        // Sortare implicită
         this.quicksort(
           this.users,
           0,
@@ -700,27 +699,26 @@ export class HomeComponent implements OnInit {
         case 'beaverDesc':
           this.buttonStates.beaverDesc = true;
           break;
-        // Alte cazuri pot fi adăugate aici, în funcție de valorile posibile ale sortParam
       }
     }
   }
 
-  sortTitleAscending() {
+  public sortTitleAscending() {
     this.setButtonStates('titleAsc');
     this.sortUsers('titleAsc');
   }
 
-  sortTitleDescending() {
+  public sortTitleDescending() {
     this.setButtonStates('titleDesc');
     this.sortUsers('titleDesc');
   }
 
-  sortBeaverAscending() {
+  public sortBeaverAscending() {
     this.setButtonStates('beaverAsc');
     this.sortUsers('beaverAsc');
   }
 
-  sortBeaverDescending() {
+  public sortBeaverDescending() {
     this.setButtonStates('beaverDesc');
     this.sortUsers('beaverDesc');
   }
@@ -780,7 +778,7 @@ export class HomeComponent implements OnInit {
     return numbers;
   }
 
-  sortUsers(sortParam: string) {
+  private sortUsers(sortParam: string) {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { sort: sortParam },
