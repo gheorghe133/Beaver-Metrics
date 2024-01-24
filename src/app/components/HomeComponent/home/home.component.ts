@@ -71,15 +71,6 @@ import { Title } from '@angular/platform-browser';
         </span>
         <span>Beavers</span>
       </button>
-
-      @if(this.showClearButton){
-      <button class="filter-button clear-filter" (click)="clearSorting()">
-        <span class="icon">
-          <i class="fa-solid fa-x"></i>
-        </span>
-        <span>Clear</span>
-      </button>
-      }
     </div>
     }
     <div class="container-table" #target>
@@ -175,7 +166,7 @@ import { Title } from '@angular/platform-browser';
 
       .hero-background {
         width: 100%;
-        min-height: 45vh;
+        min-height: 35vh;
         background: linear-gradient(45deg, #3e204a, #91775a);
         filter: blur(1000px);
         position: absolute;
@@ -220,6 +211,8 @@ import { Title } from '@angular/platform-browser';
         flex-wrap: wrap;
         margin-bottom: 1.5rem;
         gap: 10px;
+        position: relative;
+        z-index: 1;
       }
 
       .container-filters .filter-button {
@@ -269,7 +262,7 @@ import { Title } from '@angular/platform-browser';
         width: 100%;
         min-height: 682px;
         overflow-y: auto;
-        z-index: 1;
+        position: relative;
       }
 
       table {
@@ -506,7 +499,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    this.titleService.setTitle('Beaver Metrics | Home');
+    this.titleService.setTitle('Beaver Metrics | All users');
   }
 
   private loadUsers(sortParam: string | null) {
@@ -518,9 +511,6 @@ export class HomeComponent implements OnInit {
 
         if (sortParam) {
           this.sortUsersByQueryParam(sortParam);
-        } else {
-          // Sortare implicită
-          this.users.sort(this.compareByBeaverDesc);
         }
 
         this.totalItems = this.users.length;
@@ -534,9 +524,6 @@ export class HomeComponent implements OnInit {
 
           if (sortParam) {
             this.sortUsersByQueryParam(sortParam);
-          } else {
-            // Sortare implicită
-            this.users.sort(this.compareByBeaverDesc);
           }
 
           this.totalItems = this.users.length;
@@ -595,64 +582,61 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  public clearSorting() {
+  private clearSorting() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { sort: null },
       queryParamsHandling: 'merge',
     });
 
-    this.buttonStates.titleAsc = false;
-    this.buttonStates.titleDesc = false;
-    this.buttonStates.beaverAsc = false;
-    this.buttonStates.beaverDesc = false;
+    Object.keys(this.buttonStates).forEach((key) => {
+      this.buttonStates[key as keyof typeof this.buttonStates] = false;
+    });
 
     this.showClearButton = false;
 
     this.loadUsers(null);
   }
 
-  private setButtonStates(sortParam: string | null) {
+  private setButtonStates(
+    sortParam: keyof typeof HomeComponent.prototype.buttonStates
+  ) {
     Object.keys(this.buttonStates).forEach((key) => {
       this.buttonStates[key as keyof typeof this.buttonStates] = false;
     });
 
     if (sortParam) {
-      switch (sortParam) {
-        case 'titleAsc':
-          this.buttonStates.titleAsc = true;
-          break;
-        case 'titleDesc':
-          this.buttonStates.titleDesc = true;
-          break;
-        case 'beaverAsc':
-          this.buttonStates.beaverAsc = true;
-          break;
-        case 'beaverDesc':
-          this.buttonStates.beaverDesc = true;
-          break;
-      }
+      this.buttonStates[sortParam] = true;
     }
   }
 
   public sortTitleAscending() {
-    this.setButtonStates('titleAsc');
-    this.sortUsers('titleAsc');
+    this.toggleSorting('titleAsc');
   }
 
   public sortTitleDescending() {
-    this.setButtonStates('titleDesc');
-    this.sortUsers('titleDesc');
+    this.toggleSorting('titleDesc');
   }
 
   public sortBeaverAscending() {
-    this.setButtonStates('beaverAsc');
-    this.sortUsers('beaverAsc');
+    this.toggleSorting('beaverAsc');
   }
 
   public sortBeaverDescending() {
-    this.setButtonStates('beaverDesc');
-    this.sortUsers('beaverDesc');
+    this.toggleSorting('beaverDesc');
+  }
+
+  private toggleSorting(
+    sortParam: keyof typeof HomeComponent.prototype.buttonStates
+  ) {
+    if (this.buttonStates[sortParam]) {
+      // If the sorting is already active, clear it
+      this.clearSorting();
+    } else {
+      // Set the sorting and apply it
+      this.setButtonStates(sortParam);
+      this.sortUsers(sortParam);
+    }
   }
 
   public nextPage(target: HTMLElement) {
