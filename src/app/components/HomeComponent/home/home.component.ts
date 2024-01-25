@@ -160,7 +160,7 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         position: relative;
       }
 
@@ -575,7 +575,7 @@ export class HomeComponent implements OnInit {
     this.usersDisplay = this.users.slice(startIndex, endIndex);
 
     if (startIndex >= this.totalItems) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/404']);
     }
   }
 

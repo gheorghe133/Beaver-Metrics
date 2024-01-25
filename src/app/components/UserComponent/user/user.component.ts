@@ -134,7 +134,7 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         position: relative;
       }
 
@@ -482,30 +482,33 @@ export class UserComponent {
   }
 
   private getUserDetails(name: string) {
-    this.dataService.getUserData(name).subscribe((result) => {
-      this.userDetails = result;
-      this.beavers = result.beavers;
+    this.dataService.getUserData(name).subscribe(
+      (result) => {
+        this.userDetails = result;
+        this.beavers = result.beavers;
 
-      this.sortUserBeavers();
-      this.loader = false;
-      this.userDataLoaded = true;
-
-      // Check if sortParam is present in queryParams
-      const sortParam = this.activatedRoute.snapshot.queryParams['sort'];
-      if (sortParam) {
-        this.setButtonStates(sortParam);
         this.sortUserBeavers();
-        this.updateQueryParams(sortParam);
+        this.loader = false;
+        this.userDataLoaded = true;
+
+        // Check if sortParam is present in queryParams
+        const sortParam = this.activatedRoute.snapshot.queryParams['sort'];
+        if (sortParam) {
+          this.setButtonStates(sortParam);
+          this.sortUserBeavers();
+          this.updateQueryParams(sortParam);
+        }
+      },
+      (error) => {
+        this.router.navigate(['/404']);
       }
-    });
+    );
   }
 
   private updateQueryParams(sortParam?: string) {
-    const queryParams: any = { sort: sortParam };
-
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams,
+      queryParams: { sort: sortParam },
       queryParamsHandling: 'merge',
     });
   }
@@ -519,7 +522,7 @@ export class UserComponent {
       );
     } else {
       this.userBeavers = this.beavers.slice(0, this.loadedItems);
-      this.sortUserBeavers()
+      this.sortUserBeavers();
     }
   }
 
