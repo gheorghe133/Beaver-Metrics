@@ -29,6 +29,50 @@ import { Title } from '@angular/platform-browser';
         />
       </div>
     </div>
+    @if(this.usersDisplay.length > 0 && !this.searchText && !this.loader){
+    <div class="container-filters">
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.titleAsc }"
+        (click)="sortTitleAscending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Name</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.titleDesc }"
+        (click)="sortTitleDescending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Name</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverAsc }"
+        (click)="sortBeaverAscending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Beavers</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverDesc }"
+        (click)="sortBeaverDescending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Beavers</span>
+      </button>
+    </div>
+    }
     <div class="container-table" #target>
       @if(!loader){
       <table>
@@ -116,13 +160,13 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         position: relative;
       }
 
       .hero-background {
         width: 100%;
-        min-height: 45vh;
+        min-height: 35vh;
         background: linear-gradient(45deg, #3e204a, #91775a);
         filter: blur(1000px);
         position: absolute;
@@ -162,11 +206,63 @@ import { Title } from '@angular/platform-browser';
         text-align: center;
       }
 
+      .container-filters {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .container-filters .filter-button {
+        border: 2px solid #808080;
+        border-radius: 5px;
+        color: #fff;
+        background-color: transparent;
+        cursor: pointer;
+        padding-bottom: calc(0.7em - 1px);
+        padding-left: 1.5em;
+        padding-right: 1.5em;
+        padding-top: calc(0.7em - 1px);
+        text-align: center;
+        white-space: nowrap;
+        transition: transform 0.3s ease;
+      }
+
+      .container-filters .filter-button .icon {
+        margin-left: calc(-0.5em - 1px);
+        margin-right: 0.25em;
+        height: 1.5em;
+        width: 1.5em;
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+      }
+
+      .container-filters .filter-button:active {
+        transform: scale(0.95);
+      }
+
+      .container-filters .filter-button:hover {
+        background-color: #111;
+      }
+
+      .container-filters .active-filter {
+        border-color: #d1a34f !important;
+        color: #d1a34f !important;
+      }
+
+      .container-filters .clear-filter {
+        border-color: #b91c1c;
+        color: #b91c1c;
+      }
+
       .container-table {
         width: 100%;
         min-height: 682px;
         overflow-y: auto;
-        z-index: 1;
+        position: relative;
       }
 
       table {
@@ -212,7 +308,7 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         z-index: 1;
       }
 
@@ -375,6 +471,13 @@ export class HomeComponent implements OnInit {
 
   loader: boolean = true;
 
+  buttonStates = {
+    titleAsc: false,
+    titleDesc: false,
+    beaverAsc: false,
+    beaverDesc: false,
+  };
+
   constructor(
     private dataService: DataService,
     private router: Router,
@@ -385,26 +488,40 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.currentPage = params['page'] ? +params['page'] : 1;
-      this.loadUsers();
+      const sortParam = params['sort'];
+      this.loadUsers(sortParam);
+
+      if (sortParam) {
+        this.setButtonStates(sortParam);
+      }
     });
 
-    this.titleService.setTitle('Beaver Metrics | Home');
+    this.titleService.setTitle('Beaver Metrics | All users');
   }
 
-  private loadUsers() {
+  private loadUsers(sortParam: string | null) {
     if (typeof sessionStorage !== 'undefined') {
       const storedData = sessionStorage.getItem('usersData');
 
       if (storedData) {
         this.users = JSON.parse(storedData);
+
+        if (sortParam) {
+          this.sortUsersByQueryParam(sortParam);
+        }
+
         this.totalItems = this.users.length;
         this.updateUsersDisplay();
+
         this.loader = false;
       } else {
         this.dataService.getData().subscribe((data) => {
           this.users = data;
-
           sessionStorage.setItem('usersData', JSON.stringify(data));
+
+          if (sortParam) {
+            this.sortUsersByQueryParam(sortParam);
+          }
 
           this.totalItems = this.users.length;
           this.updateUsersDisplay();
@@ -416,13 +533,104 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  private sortUsersByQueryParam(param: string) {
+    switch (param) {
+      case 'titleAsc':
+        this.users.sort(this.compareByTitleAsc);
+        break;
+      case 'titleDesc':
+        this.users.sort(this.compareByTitleDesc);
+        break;
+      case 'beaverAsc':
+        this.users.sort(this.compareByBeaverAsc);
+        break;
+      case 'beaverDesc':
+        this.users.sort(this.compareByBeaverDesc);
+        break;
+      default:
+        this.users.sort(this.compareByTitleAsc);
+        break;
+    }
+  }
+
+  private compareByTitleAsc(a: any, b: any) {
+    return a.username.localeCompare(b.username);
+  }
+
+  private compareByTitleDesc(a: any, b: any) {
+    return b.username.localeCompare(a.username);
+  }
+
+  private compareByBeaverAsc(a: any, b: any) {
+    return a.total - b.total;
+  }
+
+  private compareByBeaverDesc(a: any, b: any) {
+    return b.total - a.total;
+  }
+
   private updateUsersDisplay() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.usersDisplay = this.users.slice(startIndex, endIndex);
 
     if (startIndex >= this.totalItems) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/404']);
+    }
+  }
+
+  private clearSorting() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: null },
+      queryParamsHandling: 'merge',
+    });
+
+    Object.keys(this.buttonStates).forEach((key) => {
+      this.buttonStates[key as keyof typeof this.buttonStates] = false;
+    });
+
+    this.loadUsers(null);
+  }
+
+  private setButtonStates(
+    sortParam: keyof typeof HomeComponent.prototype.buttonStates
+  ) {
+    Object.keys(this.buttonStates).forEach((key) => {
+      this.buttonStates[key as keyof typeof this.buttonStates] = false;
+    });
+
+    if (sortParam) {
+      this.buttonStates[sortParam] = true;
+    }
+  }
+
+  public sortTitleAscending() {
+    this.toggleSorting('titleAsc');
+  }
+
+  public sortTitleDescending() {
+    this.toggleSorting('titleDesc');
+  }
+
+  public sortBeaverAscending() {
+    this.toggleSorting('beaverAsc');
+  }
+
+  public sortBeaverDescending() {
+    this.toggleSorting('beaverDesc');
+  }
+
+  private toggleSorting(
+    sortParam: keyof typeof HomeComponent.prototype.buttonStates
+  ) {
+    if (this.buttonStates[sortParam]) {
+      // If the sorting is already active, clear it
+      this.clearSorting();
+    } else {
+      // Set the sorting and apply it
+      this.setButtonStates(sortParam);
+      this.sortUsers(sortParam);
     }
   }
 
@@ -481,6 +689,16 @@ export class HomeComponent implements OnInit {
     return numbers;
   }
 
+  private sortUsers(sortParam: string) {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: sortParam },
+      queryParamsHandling: 'merge',
+    });
+
+    this.sortUsersByQueryParam(sortParam);
+  }
+
   private updateQueryParams() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
@@ -501,8 +719,21 @@ export class HomeComponent implements OnInit {
 
   public searchUser() {
     if (this.searchText) {
-      this.usersDisplay = this.users.filter((user) =>
-        user.username.toLowerCase().includes(this.searchText.toLowerCase())
+      this.usersDisplay = this.users.filter(
+        (user) =>
+          user.username.toLowerCase().includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.name
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.rarity
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.type
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.level
+            .toString()
+            .includes(this.searchText.toLowerCase())
       );
     } else {
       this.updateUsersDisplay();

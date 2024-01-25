@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../../services/DataService/data.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderComponent } from '../../LoaderComponent/loader/loader.component';
 import { Title } from '@angular/platform-browser';
 
@@ -37,9 +38,54 @@ import { Title } from '@angular/platform-browser';
         />
       </div>
     </div>
+
+    @if(this.userBeavers.length > 0 && !this.searchText && !this.loader){
+    <div class="container-filters">
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverNameAsc }"
+        (click)="sortNameAscending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Name</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverNameDesc }"
+        (click)="sortNameDescending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Name</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverLevelAsc }"
+        (click)="sortValueAscending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-down-a-z"></i>
+        </span>
+        <span>Level</span>
+      </button>
+      <button
+        class="filter-button"
+        [ngClass]="{ 'active-filter': buttonStates.beaverLevelDesc }"
+        (click)="sortValueDescending()"
+      >
+        <span class="icon">
+          <i class="fa-solid fa-arrow-up-z-a"></i>
+        </span>
+        <span>Level</span>
+      </button>
+    </div>
+    }
     <div class="container-beavers">
       @for (beaver of userBeavers; track $index) {
-      <div class="beaver-card">
+      <div class="beaver-card" [ngClass]="getRarityClass(beaver.rarity)">
         <div class="beaver-image">
           <img src="../../../assets/beaver-image.jpeg" alt="Beaver Image" />
         </div>
@@ -88,13 +134,13 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         position: relative;
       }
 
       .hero-background {
         width: 100%;
-        min-height: 45vh;
+        min-height: 35vh;
         background: linear-gradient(45deg, #3e204a, #91775a);
         filter: blur(1000px);
         position: absolute;
@@ -143,6 +189,58 @@ import { Title } from '@angular/platform-browser';
         text-align: center;
       }
 
+      .container-filters {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .container-filters .filter-button {
+        border: 2px solid #808080;
+        border-radius: 5px;
+        color: #fff;
+        background-color: transparent;
+        cursor: pointer;
+        padding-bottom: calc(0.7em - 1px);
+        padding-left: 1.5em;
+        padding-right: 1.5em;
+        padding-top: calc(0.7em - 1px);
+        text-align: center;
+        white-space: nowrap;
+        transition: transform 0.3s ease;
+      }
+
+      .container-filters .filter-button .icon {
+        margin-left: calc(-0.5em - 1px);
+        margin-right: 0.25em;
+        height: 1.5em;
+        width: 1.5em;
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+      }
+
+      .container-filters .filter-button:active {
+        transform: scale(0.95);
+      }
+
+      .container-filters .filter-button:hover {
+        background-color: #111;
+      }
+
+      .container-filters .active-filter {
+        border-color: #d1a34f !important;
+        color: #d1a34f !important;
+      }
+
+      .container-filters .clear-filter {
+        border-color: #b91c1c;
+        color: #b91c1c;
+      }
+
       .container-beavers {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -164,7 +262,41 @@ import { Title } from '@angular/platform-browser';
         border: 2px solid #808080;
         border-radius: 5px;
         padding: 10px;
-        cursor: pointer;
+        cursor: default;
+      }
+
+      .container-beavers .week-color {
+        background: linear-gradient(0, #171717, transparent 66%);
+        border-color: #171717;
+      }
+
+      .container-beavers .wood-color {
+        background: linear-gradient(0, #422006, transparent 66%);
+        border-color: #422006;
+      }
+
+      .container-beavers .iron-color {
+        background: linear-gradient(0, #1f2937, transparent 66%);
+        border-color: #1f2937;
+      }
+
+      .container-beavers .gold-color {
+        background: linear-gradient(0, #ca8a04, transparent 66%);
+        border-color: #ca8a04;
+      }
+
+      .container-beavers .diamond-color {
+        background: linear-gradient(0, #0891b2, transparent 66%);
+        border-color: #0891b2;
+      }
+
+      .container-beavers .emerald-color {
+        background: linear-gradient(0, #10b981, transparent 66%);
+        border-color: #10b981;
+      }
+
+      .container-beavers .default-color {
+        background: linear-gradient(0, transparent, transparent 66%);
       }
 
       .container-beavers .beaver-card:hover {
@@ -200,7 +332,7 @@ import { Title } from '@angular/platform-browser';
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         z-index: 1;
       }
 
@@ -302,7 +434,7 @@ import { Title } from '@angular/platform-browser';
       }
     `,
   ],
-  imports: [ReactiveFormsModule, FormsModule, LoaderComponent],
+  imports: [ReactiveFormsModule, FormsModule, LoaderComponent, CommonModule],
 })
 export class UserComponent {
   searchText: string = '';
@@ -315,10 +447,20 @@ export class UserComponent {
 
   loader: boolean = true;
 
+  buttonStates = {
+    beaverNameAsc: false,
+    beaverNameDesc: false,
+    beaverLevelAsc: false,
+    beaverLevelDesc: false,
+  };
+
+  private userDataLoaded: boolean = false;
+
   constructor(
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -328,15 +470,46 @@ export class UserComponent {
 
       this.titleService.setTitle('Beaver Metrics | ' + this.name);
     });
+
+    // Subscribe to query parameter changes
+    this.activatedRoute.queryParams.subscribe((queryParams) => {
+      const sortParam = queryParams['sort'];
+      if (sortParam && this.userDataLoaded) {
+        this.setButtonStates(sortParam);
+        this.sortUserBeavers();
+      }
+    });
   }
 
   private getUserDetails(name: string) {
-    this.dataService.getUserData(name).subscribe((result) => {
-      this.userDetails = result;
-      this.beavers = result.beavers;
+    this.dataService.getUserData(name).subscribe(
+      (result) => {
+        this.userDetails = result;
+        this.beavers = result.beavers;
 
-      this.updateUserBeavers();
-      this.loader = false;
+        this.sortUserBeavers();
+        this.loader = false;
+        this.userDataLoaded = true;
+
+        // Check if sortParam is present in queryParams
+        const sortParam = this.activatedRoute.snapshot.queryParams['sort'];
+        if (sortParam) {
+          this.setButtonStates(sortParam);
+          this.sortUserBeavers();
+          this.updateQueryParams(sortParam);
+        }
+      },
+      (error) => {
+        this.router.navigate(['/404']);
+      }
+    );
+  }
+
+  private updateQueryParams(sortParam?: string) {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: sortParam },
+      queryParamsHandling: 'merge',
     });
   }
 
@@ -349,6 +522,85 @@ export class UserComponent {
       );
     } else {
       this.userBeavers = this.beavers.slice(0, this.loadedItems);
+      this.sortUserBeavers();
+    }
+  }
+
+  public sortNameAscending() {
+    this.toggleSorting('beaverNameAsc');
+  }
+
+  public sortNameDescending() {
+    this.toggleSorting('beaverNameDesc');
+  }
+
+  public sortValueAscending() {
+    this.toggleSorting('beaverLevelAsc');
+  }
+
+  public sortValueDescending() {
+    this.toggleSorting('beaverLevelDesc');
+  }
+
+  private sortUserBeavers() {
+    let sortedBeavers: any[];
+
+    switch (true) {
+      case this.buttonStates.beaverNameAsc:
+        sortedBeavers = this.beavers.slice().sort(this.compareByBeaverNameAsc);
+        break;
+      case this.buttonStates.beaverNameDesc:
+        sortedBeavers = this.beavers.slice().sort(this.compareByBeaverNameDesc);
+        break;
+      case this.buttonStates.beaverLevelAsc:
+        sortedBeavers = this.beavers.slice().sort(this.compareByBeaverLevelAsc);
+        break;
+      case this.buttonStates.beaverLevelDesc:
+        sortedBeavers = this.beavers
+          .slice()
+          .sort(this.compareByBeaverLevelDesc);
+        break;
+      default:
+        sortedBeavers = this.beavers.slice();
+        break;
+    }
+
+    this.userBeavers = sortedBeavers.slice(0, this.loadedItems);
+  }
+
+  private toggleSorting(
+    sortParam: keyof typeof UserComponent.prototype.buttonStates
+  ) {
+    if (this.buttonStates[sortParam]) {
+      this.clearSorting();
+    } else {
+      this.setButtonStates(sortParam);
+      this.sortUserBeavers();
+
+      this.updateQueryParams(sortParam);
+    }
+  }
+
+  private clearSorting() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: null },
+      queryParamsHandling: 'merge',
+    });
+
+    this.setButtonStates();
+    this.updateUserBeavers();
+  }
+
+  private setButtonStates(
+    sortParam?: keyof typeof UserComponent.prototype.buttonStates
+  ) {
+    Object.keys(this.buttonStates).forEach((key) => {
+      this.buttonStates[key as keyof typeof this.buttonStates] = false;
+    });
+
+    if (sortParam) {
+      this.buttonStates[sortParam] = true;
     }
   }
 
@@ -359,5 +611,41 @@ export class UserComponent {
   public loadMore() {
     this.loadedItems += 10;
     this.updateUserBeavers();
+    this.sortUserBeavers();
+  }
+
+  private compareByBeaverNameAsc(a: any, b: any) {
+    return a.name.localeCompare(b.name);
+  }
+
+  private compareByBeaverNameDesc(a: any, b: any) {
+    return b.name.localeCompare(a.name);
+  }
+
+  private compareByBeaverLevelAsc(a: any, b: any) {
+    return a.level - b.level;
+  }
+
+  private compareByBeaverLevelDesc(a: any, b: any) {
+    return b.level - a.level;
+  }
+
+  public getRarityClass(rarity: string): string {
+    switch (rarity.toLowerCase()) {
+      case 'huynea':
+        return 'week-color';
+      case 'wood':
+        return 'wood-color';
+      case 'iron':
+        return 'iron-color';
+      case 'gold':
+        return 'gold-color';
+      case 'diamond':
+        return 'diamond-color';
+      case 'emerald':
+        return 'emerald-color';
+      default:
+        return 'default-color';
+    }
   }
 }
