@@ -719,8 +719,21 @@ export class HomeComponent implements OnInit {
 
   public searchUser() {
     if (this.searchText) {
-      this.usersDisplay = this.users.filter((user) =>
-        user.username.toLowerCase().includes(this.searchText.toLowerCase())
+      this.usersDisplay = this.users.filter(
+        (user) =>
+          user.username.toLowerCase().includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.name
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.rarity
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.type
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase()) ||
+          user.best_beaver.level
+            .toString()
+            .includes(this.searchText.toLowerCase())
       );
     } else {
       this.updateUsersDisplay();

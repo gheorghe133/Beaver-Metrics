@@ -265,28 +265,34 @@ import { Title } from '@angular/platform-browser';
         cursor: default;
       }
 
-      .container-beavers .huynea-color {
+      .container-beavers .week-color {
         background: linear-gradient(0, #171717, transparent 66%);
+        border-color: #171717;
       }
 
       .container-beavers .wood-color {
-        background: linear-gradient(0, #0f172a, transparent 66%);
+        background: linear-gradient(0, #422006, transparent 66%);
+        border-color: #422006;
       }
 
       .container-beavers .iron-color {
-        background: linear-gradient(0, #4b5563, transparent 66%);
+        background: linear-gradient(0, #1f2937, transparent 66%);
+        border-color: #1f2937;
       }
 
       .container-beavers .gold-color {
         background: linear-gradient(0, #ca8a04, transparent 66%);
+        border-color: #ca8a04;
       }
 
       .container-beavers .diamond-color {
-        background: linear-gradient(0, #0e7490, transparent 66%);
+        background: linear-gradient(0, #0891b2, transparent 66%);
+        border-color: #0891b2;
       }
 
       .container-beavers .emerald-color {
-        background: linear-gradient(0, #22c55e, transparent 66%);
+        background: linear-gradient(0, #10b981, transparent 66%);
+        border-color: #10b981;
       }
 
       .container-beavers .default-color {
@@ -469,7 +475,6 @@ export class UserComponent {
     this.activatedRoute.queryParams.subscribe((queryParams) => {
       const sortParam = queryParams['sort'];
       if (sortParam && this.userDataLoaded) {
-        // Sort if user data is available
         this.setButtonStates(sortParam);
         this.sortUserBeavers();
       }
@@ -481,7 +486,7 @@ export class UserComponent {
       this.userDetails = result;
       this.beavers = result.beavers;
 
-      this.sortUserBeavers(); // Initially, you can apply default sorting
+      this.sortUserBeavers();
       this.loader = false;
       this.userDataLoaded = true;
 
@@ -498,7 +503,6 @@ export class UserComponent {
   private updateQueryParams(sortParam?: string) {
     const queryParams: any = { sort: sortParam };
 
-    // Use queryParamsHandling to merge with existing query parameters
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams,
@@ -535,35 +539,28 @@ export class UserComponent {
   }
 
   private sortUserBeavers() {
-    let sortedBeavers: any[]; // Variable to store sorted beavers
+    let sortedBeavers: any[];
 
     switch (true) {
       case this.buttonStates.beaverNameAsc:
-        sortedBeavers = this.userBeavers
-          .slice()
-          .sort(this.compareByBeaverNameAsc);
+        sortedBeavers = this.beavers.slice().sort(this.compareByBeaverNameAsc);
         break;
       case this.buttonStates.beaverNameDesc:
-        sortedBeavers = this.userBeavers
-          .slice()
-          .sort(this.compareByBeaverNameDesc);
+        sortedBeavers = this.beavers.slice().sort(this.compareByBeaverNameDesc);
         break;
       case this.buttonStates.beaverLevelAsc:
-        sortedBeavers = this.userBeavers
-          .slice()
-          .sort(this.compareByBeaverLevelAsc);
+        sortedBeavers = this.beavers.slice().sort(this.compareByBeaverLevelAsc);
         break;
       case this.buttonStates.beaverLevelDesc:
-        sortedBeavers = this.userBeavers
+        sortedBeavers = this.beavers
           .slice()
           .sort(this.compareByBeaverLevelDesc);
         break;
       default:
-        sortedBeavers = this.beavers.slice(0, this.loadedItems); // Use the original loaded items if no sorting
+        sortedBeavers = this.beavers.slice();
         break;
     }
 
-    // Now, update the userBeavers with the sorted beavers and maintain the loaded items
     this.userBeavers = sortedBeavers.slice(0, this.loadedItems);
   }
 
@@ -571,14 +568,11 @@ export class UserComponent {
     sortParam: keyof typeof UserComponent.prototype.buttonStates
   ) {
     if (this.buttonStates[sortParam]) {
-      // If the sorting is already active, clear it
       this.clearSorting();
     } else {
-      // Set the sorting and apply it
       this.setButtonStates(sortParam);
       this.sortUserBeavers();
 
-      // Update query parameters
       this.updateQueryParams(sortParam);
     }
   }
@@ -597,8 +591,6 @@ export class UserComponent {
   private setButtonStates(
     sortParam?: keyof typeof UserComponent.prototype.buttonStates
   ) {
-    // Implement setting button states logic
-    // Set the specified sorting button to true, set others to false
     Object.keys(this.buttonStates).forEach((key) => {
       this.buttonStates[key as keyof typeof this.buttonStates] = false;
     });
@@ -615,6 +607,7 @@ export class UserComponent {
   public loadMore() {
     this.loadedItems += 10;
     this.updateUserBeavers();
+    this.sortUserBeavers();
   }
 
   private compareByBeaverNameAsc(a: any, b: any) {
@@ -626,18 +619,17 @@ export class UserComponent {
   }
 
   private compareByBeaverLevelAsc(a: any, b: any) {
-    return a.level - b.level; // Change 'value' to the actual property you want to sort by
+    return a.level - b.level;
   }
 
   private compareByBeaverLevelDesc(a: any, b: any) {
-    return b.level - a.level; // Change 'value' to the actual property you want to sort by
+    return b.level - a.level;
   }
 
-  // In your component class Huynea -> Wood -> Iron -> Gold -> Diamond -> Emerald
   public getRarityClass(rarity: string): string {
     switch (rarity.toLowerCase()) {
       case 'huynea':
-        return 'huynea-color';
+        return 'week-color';
       case 'wood':
         return 'wood-color';
       case 'iron':
