@@ -519,6 +519,7 @@ export class UserComponent {
       );
     } else {
       this.userBeavers = this.beavers.slice(0, this.loadedItems);
+      this.sortUserBeavers()
     }
   }
 
